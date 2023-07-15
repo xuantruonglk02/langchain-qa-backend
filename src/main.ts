@@ -6,7 +6,9 @@ import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 import { ConfigKey } from './common/configs/config-keys';
+import { pinecone } from './modules/chat/components/langchain/models/Pinecone';
 import './plugins/moment';
+import { initializeLangchainAgent } from './modules/chat/components/langchain/agent';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,6 +36,9 @@ async function bootstrap() {
     app.setGlobalPrefix(configService.get(ConfigKey.APP_BASE_PATH) as string);
     // use winston for logger
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+    await pinecone.initialize();
+    await initializeLangchainAgent();
 
     await app.listen(configService.get(ConfigKey.APP_PORT) as string);
 }
