@@ -10,6 +10,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { HeaderMiddleware } from './common/middleware/header.middleware';
 import { MongoModule } from './common/modules/mongo.module';
 import { WinstonModule } from './common/modules/winston.module';
+import { UserModule } from './modules/user.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { WinstonModule } from './common/modules/winston.module';
         ScheduleModule.forRoot(),
         MongoModule,
         WinstonModule,
+        UserModule,
     ],
     controllers: [AppController],
     providers: [

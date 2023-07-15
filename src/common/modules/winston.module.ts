@@ -5,31 +5,6 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 import { ConfigKey } from '../configs/config-keys';
 
-export function createWinstonLogger(
-    filename: string,
-    configService: ConfigService,
-) {
-    return winston.createLogger({
-        level: configService.get(ConfigKey.LOG_LEVEL),
-        format: winston.format.json(),
-        defaultMeta: { service: 'movie-website' },
-        transports: [
-            new winston.transports.Console({
-                level: configService.get(ConfigKey.LOG_LEVEL),
-            }),
-            new winston.transports.DailyRotateFile({
-                filename: `${configService.get(
-                    ConfigKey.LOG_ROOT_FOLDER,
-                )}/${filename}-%DATE%.log`,
-                datePattern: 'YYYY-MM-DD-HH',
-                zippedArchive: true,
-                maxSize: '20m',
-                maxFiles: '14d',
-            }),
-        ],
-    });
-}
-
 @Module({
     imports: [
         NestWinstonModule.forRootAsync({
@@ -39,7 +14,9 @@ export function createWinstonLogger(
                 return winston.createLogger({
                     level: configService.get(ConfigKey.LOG_LEVEL),
                     format: winston.format.json(),
-                    defaultMeta: { service: 'movie-backend' },
+                    defaultMeta: {
+                        service: configService.get(ConfigKey.LOG_DEFAULT_META),
+                    },
                     transports: [
                         new winston.transports.Console({
                             level: configService.get(ConfigKey.LOG_LEVEL),
@@ -47,7 +24,9 @@ export function createWinstonLogger(
                         new winston.transports.DailyRotateFile({
                             filename: `${configService.get(
                                 ConfigKey.LOG_ROOT_FOLDER,
-                            )}/movie-backend-%DATE%.log`,
+                            )}/${configService.get(
+                                ConfigKey.LOG_DEFAULT_META,
+                            )}-%DATE%.log`,
                             datePattern: 'YYYY-MM-DD-HH',
                             zippedArchive: true,
                             maxSize: '20m',

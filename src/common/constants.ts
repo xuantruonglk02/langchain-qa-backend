@@ -6,15 +6,8 @@ export enum Language {
 }
 
 export enum MongoCollection {
-    ACTORS = 'actors',
-    CATEGORIES = 'categories',
-    COMMENTS = 'comments',
-    EMAIL_REGISTRATIONS = 'email_registrations',
     FILES = 'files',
-    MOVIES = 'movies',
-    PLAYLISTS = 'playlists',
     USERS = 'users',
-    USER_TOKENS = 'user_tokens',
 }
 
 export enum OrderDirection {
@@ -57,19 +50,10 @@ export const TIMEZONE_HEADER = 'x-timezone';
 export const TIMEZONE_NAME_HEADER = 'x-timezone-name';
 
 export const softDeleteCondition = {
-    $or: [
-        {
-            deletedAt: {
-                $exists: true,
-                $eq: null,
-            },
-        },
-        {
-            deletedAt: {
-                $exists: false,
-            },
-        },
-    ],
+    deletedAt: {
+        $exists: true,
+        $eq: null,
+    },
 };
 
 export const commonListQuerySchemaKeys = {
