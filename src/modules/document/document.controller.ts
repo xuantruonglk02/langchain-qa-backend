@@ -15,7 +15,6 @@ import {
     Param,
     Post,
     Query,
-    Req,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { FileService } from '../file/services/file.service';
@@ -69,7 +68,6 @@ export class DocumentController {
             new JoiValidationPipe(getUrlUploadDocumentQuerySchema),
         )
         query: IGetUrlUploadDocument,
-        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.getDocumentById(id, [
@@ -96,7 +94,7 @@ export class DocumentController {
             const uploadFile =
                 await this.documentService.getUrlUploadDocumentToS3(
                     query.fileExtension,
-                    req.loggedUser._id,
+                    null as any,
                 );
             return new SuccessResponse(uploadFile);
         } catch (error) {
@@ -116,12 +114,11 @@ export class DocumentController {
             new JoiValidationPipe(createDocumentBodySchema),
         )
         body: ICreateDocument,
-        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.createDocument(
                 body,
-                req.loggedUser._id,
+                null as any,
             );
             return new SuccessResponse(document);
         } catch (error) {
@@ -142,7 +139,6 @@ export class DocumentController {
             new JoiValidationPipe(confirmDocumentUploadedBodySchema),
         )
         body: IConfirmDocumentUploaded,
-        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.getDocumentById(id, [
@@ -197,7 +193,7 @@ export class DocumentController {
                 await this.documentService.confirmDocumentUploadedToS3(
                     id,
                     body.fileId,
-                    req.loggedUser._id,
+                    null as any,
                 );
             if (!updatedDocument) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
