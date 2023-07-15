@@ -10,7 +10,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { HeaderMiddleware } from './common/middleware/header.middleware';
 import { MongoModule } from './common/modules/mongo.module';
 import { WinstonModule } from './common/modules/winston.module';
-import { UserModule } from './modules/user.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
     imports: [

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const { VERSION: version = '1.0.0' } = process.env;
+const { VERSION: version = '0.0.0' } = process.env;
 
 export interface IErrorResponse {
     key: string;
