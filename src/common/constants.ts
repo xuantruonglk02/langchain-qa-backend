@@ -6,6 +6,7 @@ export enum Language {
 }
 
 export enum MongoCollection {
+    DOCUMENTS = 'documents',
     FILES = 'files',
     USERS = 'users',
 }
