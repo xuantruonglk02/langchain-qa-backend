@@ -17,8 +17,8 @@
         "prettier:staged": "prettier --write $(git diff --name-only --cached --diff-filter=d | grep -E \"^src/.*\\.ts$\" | xargs)"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.267.0",
-        "@aws-sdk/s3-request-presigner": "^3.267.0",
+        "@aws-sdk/client-s3": "^3.367.0",
+        "@aws-sdk/s3-request-presigner": "^3.367.0",
         "@joi/date": "^2.1.0",
         "@nestjs-modules/mailer": "^1.8.1",
         "@nestjs/common": "^9.2.1",
@@ -38,8 +38,8 @@
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.40",
-        "mongodb": "^4.13.0",
-        "mongoose": "^6.9.0",
+        "mongodb": "^5.6.0",
+        "mongoose": "^7.3.1",
         "nest-winston": "^1.8.0",
         "reflect-metadata": "^0.1.13",
         "uuid": "^9.0.0",
