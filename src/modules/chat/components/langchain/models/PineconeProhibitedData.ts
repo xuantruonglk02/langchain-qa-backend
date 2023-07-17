@@ -7,7 +7,7 @@ import { PineconeStore } from 'langchain/vectorstores/pinecone';
 
 dotenv.config();
 
-class Pinecone {
+class PineconeProhibitedData {
     private readonly openAIEmbedding: OpenAIEmbeddings;
     private readonly client: PineconeClient;
     private index: VectorOperationsApi;
@@ -24,13 +24,13 @@ class Pinecone {
     async initialize() {
         try {
             await this.client.init({
-                apiKey: process.env[ConfigKey.PINECONE_API_KEY] as string,
+                apiKey: process.env[ConfigKey.PINECONE_PD_API_KEY] as string,
                 environment: process.env[
-                    ConfigKey.PINECONE_ENVIRONMENT
+                    ConfigKey.PINECONE_PD_ENVIRONMENT
                 ] as string,
             });
             this.index = this.client.Index(
-                process.env[ConfigKey.PINECONE_INDEX] as string,
+                process.env[ConfigKey.PINECONE_PD_INDEX] as string,
             );
             this.vectorStore = await PineconeStore.fromExistingIndex(
                 this.openAIEmbedding,
@@ -44,4 +44,4 @@ class Pinecone {
     }
 }
 
-export const pinecone = new Pinecone();
+export const pineconePD = new PineconeProhibitedData();

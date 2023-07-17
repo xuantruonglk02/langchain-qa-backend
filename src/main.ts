@@ -6,9 +6,10 @@ import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 import { ConfigKey } from './common/configs/config-keys';
-import { pinecone } from './modules/chat/components/langchain/models/Pinecone';
+import { chatConversationalAgent } from './modules/chat/components/langchain/agents/ChatConversationAgent';
+import { pineconeData } from './modules/chat/components/langchain/models/PineconeData';
+import { pineconePD } from './modules/chat/components/langchain/models/PineconeProhibitedData';
 import './plugins/moment';
-import { initializeLangchainAgent } from './modules/chat/components/langchain/agent';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -37,8 +38,9 @@ async function bootstrap() {
     // use winston for logger
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-    await pinecone.initialize();
-    await initializeLangchainAgent();
+    await pineconeData.initialize();
+    await pineconePD.initialize();
+    await chatConversationalAgent.initialize();
 
     await app.listen(configService.get(ConfigKey.APP_PORT) as string);
 }

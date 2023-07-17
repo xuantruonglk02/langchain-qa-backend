@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { agentExecutor } from '../components/langchain/agent';
+import { chatConversationalAgent } from '../components/langchain/agents/ChatConversationAgent';
 
 @Injectable()
 export class ChatService {
@@ -7,9 +7,7 @@ export class ChatService {
 
     async callAgent(message: string) {
         try {
-            const reply = await agentExecutor.call({ input: message }, [
-                // new LoggingCallbackHandler('Agent'),
-            ]);
+            const reply = await chatConversationalAgent.call(message);
             return reply;
         } catch (error) {
             this.logger.error('In callAgent()', error, ChatService.name);
