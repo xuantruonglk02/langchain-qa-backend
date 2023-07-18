@@ -13,7 +13,7 @@ export class VectorStoreQATool2 extends ChainTool {
         super({
             name: 'VectorStoreBannedContent',
             description:
-                'You must use this tool first to check user questions for policy violations',
+                'Gives agent the ability to access and find prohibited content.',
             chain: vectorDBQAChain,
         });
     }
