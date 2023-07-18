@@ -3,11 +3,10 @@ import {
     initializeAgentExecutorWithOptions,
 } from 'langchain/agents';
 import { ConsoleCallbackHandler } from 'langchain/callbacks';
-import { chatOpenAI } from '../models/ChatOpenAI';
-import { CalculatorTool } from '../tools/Caculator.tool';
-import { SerpAPITool } from '../tools/SerpAPI.tool';
-import { VectorStoreQATool } from '../tools/VectorStoreQA.tool';
-import { VectorStoreQATool2 } from '../tools/VectorStoreQA2.tool';
+import { chatOpenAIModel } from '../models/ChatOpenAI';
+import { CalculatorTool } from '../tools/Caculator';
+import { VectorStoreQATool } from '../tools/VectorStoreQA';
+import { VectorStoreQATool2 } from '../tools/VectorStoreQA2';
 
 class ChatConversationalAgent {
     private executor: AgentExecutor;
@@ -18,12 +17,12 @@ class ChatConversationalAgent {
                 new VectorStoreQATool2(),
                 new CalculatorTool(),
                 new VectorStoreQATool(),
-                new SerpAPITool(),
+                // new SerpAPITool(),
             ];
 
             this.executor = await initializeAgentExecutorWithOptions(
                 tools,
-                chatOpenAI,
+                chatOpenAIModel,
                 {
                     agentType: 'chat-conversational-react-description',
                     returnIntermediateSteps: true,

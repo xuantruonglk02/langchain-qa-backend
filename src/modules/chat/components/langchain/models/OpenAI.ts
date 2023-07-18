@@ -1,10 +1,10 @@
 import { ConfigKey } from '@/common/configs/config-keys';
 import dotenv from 'dotenv';
-import { ChatOpenAI as ChatOpenAILangchain } from 'langchain/chat_models/openai';
+import { ChatOpenAI as OpenAILangchain } from 'langchain/chat_models/openai';
 
 dotenv.config();
 
-class ChatOpenAI extends ChatOpenAILangchain {
+class OpenAI extends OpenAILangchain {
     constructor() {
         super({
             modelName: 'gpt-3.5-turbo',
@@ -16,4 +16,4 @@ class ChatOpenAI extends ChatOpenAILangchain {
     }
 }
 
-export const chatOpenAIModel = new ChatOpenAI();
+export const openAIModel = new OpenAI();

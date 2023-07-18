@@ -1,14 +1,9 @@
-import { VectorDBQAChain } from 'langchain/chains';
 import { ChainTool } from 'langchain/tools';
-import { chatOpenAI } from '../models/ChatOpenAI';
-import { pineconeData } from '../models/PineconeData';
+import { VectorDBQAChain } from '../chains/VectorDBQAChain';
 
 export class VectorStoreQATool extends ChainTool {
     constructor() {
-        const vectorDBQAChain = VectorDBQAChain.fromLLM(
-            chatOpenAI,
-            pineconeData.vectorStore,
-        );
+        const vectorDBQAChain = new VectorDBQAChain();
 
         super({
             name: 'VectorStoreQA',

@@ -8,6 +8,7 @@ export class ChatService {
     async callAgent(message: string) {
         try {
             const reply = await chatConversationalAgent.call(message);
+            // const reply = await chatConversationalAgent2.call(message);
             return reply;
         } catch (error) {
             this.logger.error('In callAgent()', error, ChatService.name);
