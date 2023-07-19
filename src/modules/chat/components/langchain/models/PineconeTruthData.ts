@@ -2,22 +2,17 @@ import { ConfigKey } from '@/common/configs/config-keys';
 import { PineconeClient } from '@pinecone-database/pinecone';
 import { VectorOperationsApi } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch';
 import dotenv from 'dotenv';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
+import { openAIEmbeddings } from './OpenAIEmbeddings';
 
 dotenv.config();
 
 class PineconeTruthData {
-    private readonly openAIEmbedding: OpenAIEmbeddings;
     private readonly client: PineconeClient;
     private index: VectorOperationsApi;
     public vectorStore: PineconeStore;
 
     constructor() {
-        this.openAIEmbedding = new OpenAIEmbeddings({
-            openAIApiKey: process.env[ConfigKey.OPENAI_API_KEY],
-            verbose: process.env[ConfigKey.OPENAI_VERBOSE] === 'true',
-        });
         this.client = new PineconeClient();
     }
 
@@ -33,7 +28,7 @@ class PineconeTruthData {
                 process.env[ConfigKey.PINECONE_TRUTH_INDEX] as string,
             );
             this.vectorStore = await PineconeStore.fromExistingIndex(
-                this.openAIEmbedding,
+                openAIEmbeddings,
                 {
                     pineconeIndex: this.index,
                 },

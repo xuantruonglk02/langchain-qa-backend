@@ -7,10 +7,12 @@ dotenv.config();
 class ChatOpenAI extends ChatOpenAILangchain {
     constructor() {
         super({
-            modelName: 'gpt-3.5-turbo',
-            temperature: 0.5,
-            // timeout: 5000,
+            modelName: process.env[ConfigKey.OPENAI_MODEL_NAME],
             openAIApiKey: process.env[ConfigKey.OPENAI_API_KEY],
+            temperature: parseInt(
+                process.env[ConfigKey.OPENAI_TEMPERATURE] as string,
+            ),
+            // timeout: 5000,
             verbose: process.env[ConfigKey.OPENAI_VERBOSE] === 'true',
         });
     }
