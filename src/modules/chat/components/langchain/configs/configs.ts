@@ -14,10 +14,10 @@ export const LangchainConfigs = {
             description:
                 "Gives agent the ability to access and find information in user's documents.",
         },
-        vectorStoreBannedContent: {
-            name: 'VectorStoreBannedContent',
+        constitution: {
+            name: 'Constitution',
             description:
-                'Gives agent the ability to access and find prohibited content.',
+                'Provides principles for the content of the conversation to follow',
         },
     },
 };

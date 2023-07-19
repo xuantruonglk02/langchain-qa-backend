@@ -8,7 +8,7 @@ class ChatOpenAI extends ChatOpenAILangchain {
     constructor() {
         super({
             modelName: 'gpt-3.5-turbo',
-            temperature: 0,
+            temperature: 0.5,
             // timeout: 5000,
             openAIApiKey: process.env[ConfigKey.OPENAI_API_KEY],
             verbose: process.env[ConfigKey.OPENAI_VERBOSE] === 'true',

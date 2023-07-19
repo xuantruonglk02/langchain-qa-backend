@@ -18,6 +18,6 @@ First, Assistant must ask the user to use the tool which is used to check if the
 
 USER'S INPUT
 --------------------
-Here is the user's input. Let's respond to the user in the language they asked in (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):
+Here is the user's input. Assistant must respond to the user in the language they asked in (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):
 
 {{input}}`;
