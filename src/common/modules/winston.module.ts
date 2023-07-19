@@ -1,3 +1,4 @@
+import moment from '@/plugins/moment';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WinstonModule as NestWinstonModule } from 'nest-winston';
@@ -40,3 +41,32 @@ import { ConfigKey } from '../configs/config-keys';
     providers: [],
 })
 export class WinstonModule {}
+
+export const createWinstonLoggerLangchain = () => {
+    return winston.createLogger({
+        level: 'debug',
+        format: winston.format.combine(
+            winston.format((info) => {
+                info._time = moment().fmFullTimeStringWithTimezone();
+                info.context = 'langchain';
+                return info;
+            })(),
+            winston.format.json(),
+        ),
+        defaultMeta: {
+            service: 'langchain-qa-backend',
+        },
+        transports: [
+            new winston.transports.Console({
+                level: 'debug',
+            }),
+            new winston.transports.DailyRotateFile({
+                filename: `./logs.langchain/langchain-qa-backend-%DATE%.log`,
+                datePattern: 'YYYY-MM-DD-HH',
+                zippedArchive: true,
+                maxSize: '20m',
+                maxFiles: '14d',
+            }),
+        ],
+    });
+};

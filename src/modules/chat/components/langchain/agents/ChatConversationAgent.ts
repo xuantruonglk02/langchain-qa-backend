@@ -2,7 +2,7 @@ import {
     AgentExecutor,
     initializeAgentExecutorWithOptions,
 } from 'langchain/agents';
-import { ConsoleCallbackHandler } from 'langchain/callbacks';
+import { LoggingCallbackHandler } from '../callbacks/LoggingCallbackHandler';
 import {
     CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
     CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
@@ -44,8 +44,7 @@ class ChatConversationalAgent {
     async call(input: string) {
         try {
             const result = await this.executor.call({ input }, [
-                // new LoggingCallbackHandler('Agent'),
-                new ConsoleCallbackHandler(),
+                new LoggingCallbackHandler(),
             ]);
             return result;
         } catch (error) {
