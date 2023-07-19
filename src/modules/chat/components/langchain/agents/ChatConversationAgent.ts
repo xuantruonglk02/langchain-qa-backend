@@ -10,6 +10,7 @@ import {
 import { chatOpenAIModel } from '../models/ChatOpenAI';
 import { CalculatorTool } from '../tools/Calculator';
 import { Constitution } from '../tools/Constitution';
+import { TruthQATool } from '../tools/TruthQA';
 import { VectorStoreQATool } from '../tools/VectorStoreQA';
 
 class ChatConversationalAgent {
@@ -21,6 +22,7 @@ class ChatConversationalAgent {
                 new Constitution(),
                 new CalculatorTool(),
                 new VectorStoreQATool(),
+                new TruthQATool(),
                 // new SerpAPITool(),
             ];
 

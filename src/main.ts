@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 import { ConfigKey } from './common/configs/config-keys';
 import { chatConversationalAgent } from './modules/chat/components/langchain/agents/ChatConversationAgent';
 import { pineconeData } from './modules/chat/components/langchain/models/PineconeData';
-import { pineconePD } from './modules/chat/components/langchain/models/PineconeProhibitedData';
+import { pineconeTruth } from './modules/chat/components/langchain/models/PineconeTruthData';
 import './plugins/moment';
 
 async function bootstrap() {
@@ -39,7 +39,7 @@ async function bootstrap() {
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
     await pineconeData.initialize();
-    await pineconePD.initialize();
+    await pineconeTruth.initialize();
     await chatConversationalAgent.initialize();
 
     await app.listen(configService.get(ConfigKey.APP_PORT) as string);

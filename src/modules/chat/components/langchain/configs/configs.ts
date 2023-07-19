@@ -19,5 +19,9 @@ export const LangchainConfigs = {
             description:
                 'Provides principles for the content of the conversation to follow',
         },
+        truthQA: {
+            name: 'TheTruth',
+            description: 'Provides absolutely accurate and factual information',
+        },
     },
 };
