@@ -1,5 +1,6 @@
 import { VectorDBQAChain } from 'langchain/chains';
 import { ChainTool } from 'langchain/tools';
+import { LangchainConfigs } from '../configs/configs';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
 import { pineconePD } from '../models/PineconeProhibitedData';
 
@@ -11,9 +12,9 @@ export class VectorStoreQATool2 extends ChainTool {
         );
 
         super({
-            name: 'VectorStoreBannedContent',
+            name: LangchainConfigs.tools.vectorStoreBannedContent.name,
             description:
-                'Gives agent the ability to access and find prohibited content.',
+                LangchainConfigs.tools.vectorStoreBannedContent.description,
             chain: vectorDBQAChain,
         });
     }

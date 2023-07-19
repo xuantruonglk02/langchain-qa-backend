@@ -1,6 +1,7 @@
 import { ConfigKey } from '@/common/configs/config-keys';
 import dotenv from 'dotenv';
 import { SerpAPI } from 'langchain/tools';
+import { LangchainConfigs } from '../configs/configs';
 
 dotenv.config();
 
@@ -12,8 +13,7 @@ export class SerpAPITool extends SerpAPI {
             gl: 'us',
         });
 
-        this.name = 'SerpAPI';
-        this.description =
-            'Wrapper around SerpAPI - a real-time API to access Google search results';
+        this.name = LangchainConfigs.tools.serpAPI.name;
+        this.description = LangchainConfigs.tools.serpAPI.description;
     }
 }

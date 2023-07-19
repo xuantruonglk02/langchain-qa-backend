@@ -3,9 +3,12 @@ import {
     initializeAgentExecutorWithOptions,
 } from 'langchain/agents';
 import { ConsoleCallbackHandler } from 'langchain/callbacks';
+import {
+    CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
+    CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
+} from '../configs/prompts';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
-import { DEFAULT_PREFIX, DEFAULT_SUFFIX } from '../prompts';
-import { CalculatorTool } from '../tools/Caculator';
+import { CalculatorTool } from '../tools/Calculator';
 import { SerpAPITool } from '../tools/SerpAPI';
 import { VectorStoreQATool } from '../tools/VectorStoreQA';
 import { VectorStoreQATool2 } from '../tools/VectorStoreQA2';
@@ -29,8 +32,8 @@ class ChatConversationalAgent {
                     agentType: 'chat-conversational-react-description',
                     returnIntermediateSteps: true,
                     agentArgs: {
-                        systemMessage: DEFAULT_PREFIX,
-                        humanMessage: DEFAULT_SUFFIX,
+                        systemMessage: CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
+                        humanMessage: CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
                     },
                 },
             );
