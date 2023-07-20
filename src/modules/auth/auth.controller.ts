@@ -32,7 +32,6 @@ export class AuthController {
                 error,
                 AuthController.name,
             );
-            console.log(error);
             throw new InternalServerErrorException(error);
         }
     }
