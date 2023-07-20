@@ -80,7 +80,7 @@ export class DocumentController {
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);
@@ -88,7 +88,7 @@ export class DocumentController {
             if (document.fileId) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'id',
                     },
                 ]);
@@ -151,7 +151,7 @@ export class DocumentController {
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);
@@ -159,7 +159,7 @@ export class DocumentController {
             if (document.fileId) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'id',
                     },
                 ]);
@@ -172,7 +172,7 @@ export class DocumentController {
             if (isFileMapped) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'fileId',
                     },
                 ]);
@@ -186,7 +186,7 @@ export class DocumentController {
             if (!file) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'fileId',
                     },
                 ]);
@@ -201,7 +201,7 @@ export class DocumentController {
             if (!updatedDocument) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'fileId',
                     },
                 ]);

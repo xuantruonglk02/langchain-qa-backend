@@ -12,6 +12,7 @@ import { MongoModule } from './common/modules/mongo.module';
 import { WinstonModule } from './common/modules/winston.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { ConversationModule } from './modules/conversation/conversation.module';
 import { DocumentModule } from './modules/document/document.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -25,6 +26,7 @@ import { UserModule } from './modules/user/user.module';
         WinstonModule,
         AuthModule,
         ChatModule,
+        ConversationModule,
         DocumentModule,
         UserModule,
     ],

@@ -26,7 +26,7 @@ export class UserController {
             if (!user) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);

@@ -1,8 +1,9 @@
 import { softDeleteCondition } from '@/common/constants';
+import { ConversationService } from '@/modules/conversation/services/conversation.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 import {
     User,
     UserDocument,
@@ -15,7 +16,10 @@ export class UserService {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<UserDocument>,
+        @InjectConnection()
+        private readonly connection: Connection,
         private readonly logger: Logger,
+        private readonly conversationService: ConversationService,
     ) {}
 
     async getUserById(id: ObjectId, attrs = userAttributes) {
@@ -25,7 +29,8 @@ export class UserService {
                     _id: id,
                     ...softDeleteCondition,
                 })
-                .select(attrs);
+                .select(attrs)
+                .lean();
             return user;
         } catch (error) {
             this.logger.error('In getUserById()', error, UserService.name);
@@ -50,18 +55,37 @@ export class UserService {
     }
 
     async createUserSSO(data: IUser) {
+        const session = await this.connection.startSession();
         try {
-            const users = await this.userModel.create([
-                {
-                    email: data.email,
-                    name: data.name,
-                    picture: data.picture,
-                },
-            ]);
-            return users[0];
+            session.startTransaction();
+
+            const users = await this.userModel.create(
+                [
+                    {
+                        email: data.email,
+                        name: data.name,
+                        picture: data.picture,
+                    },
+                ],
+                { session },
+            );
+            const user = users[0];
+            // TODO: create conversation in client when chat first time or when call api
+            await this.conversationService.createConversation(
+                { title: 'Default' },
+                user._id,
+                session,
+            );
+
+            await session.commitTransaction();
+
+            return await this.getUserById(user._id);
         } catch (error) {
+            await session.abortTransaction();
             this.logger.error('In createUserSSO()', error, UserService.name);
             throw error;
+        } finally {
+            session.endSession();
         }
     }
 }

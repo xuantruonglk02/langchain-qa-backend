@@ -59,12 +59,14 @@ export class DocumentService {
                 orderDirection = DEFAULT_ORDER_DIRECTION,
             } = query;
             const getListQuery: Record<string, any> = {
-                name: {
-                    $regex: `.*${keyword}.*`,
-                    $options: 'i',
-                },
                 ...softDeleteCondition,
             };
+            if (keyword) {
+                getListQuery.name = {
+                    $regex: `.*${keyword}.*`,
+                    $options: 'i',
+                };
+            }
 
             const [documentList, total] = await Promise.all([
                 this.documentModel.aggregate([

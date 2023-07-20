@@ -22,7 +22,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
             const status = exception.getStatus();
 
             const parsedResponse = {
-                code: exception.getStatus(),
+                statusCode: exception.getStatus(),
                 name: exception.name,
                 message: exception.message,
                 errors: apiResponse?.error || [],
@@ -31,7 +31,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
             return response.status(status).json(parsedResponse);
         } catch (error) {
             return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: HttpStatus.INTERNAL_SERVER_ERROR,
+                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
                 name: 'Internal Server Error',
                 message: exception.message,
                 error: exception,
