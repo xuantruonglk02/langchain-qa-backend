@@ -40,7 +40,8 @@ export class UserService {
                     email,
                     ...softDeleteCondition,
                 })
-                .select(attrs);
+                .select(attrs)
+                .lean();
             return user;
         } catch (error) {
             this.logger.error('In getUserByEmail()', error, UserService.name);

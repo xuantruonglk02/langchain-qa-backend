@@ -1,4 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileModule } from '../file/file.module';
 import { DocumentController } from './document.controller';
@@ -13,6 +14,6 @@ import { DocumentService } from './services/document.service';
         FileModule,
     ],
     controllers: [DocumentController],
-    providers: [Logger, DocumentService],
+    providers: [Logger, JwtService, DocumentService],
 })
 export class DocumentModule {}

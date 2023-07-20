@@ -1,3 +1,4 @@
+import { AuthenticationGuard } from '@/common/guards/authentication.guard';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import {
     Controller,
@@ -6,10 +7,12 @@ import {
     InternalServerErrorException,
     Logger,
     Req,
+    UseGuards,
 } from '@nestjs/common';
 import { UserService } from './services/user.service';
 
 @Controller('/user')
+@UseGuards(AuthenticationGuard)
 export class UserController {
     constructor(
         private readonly logger: Logger,

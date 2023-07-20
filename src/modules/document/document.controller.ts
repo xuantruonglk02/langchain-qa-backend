@@ -1,4 +1,5 @@
 import { commonListQuerySchema } from '@/common/constants';
+import { AuthenticationGuard } from '@/common/guards/authentication.guard';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import { ICommonListQuery } from '@/common/interfaces';
 import { JoiValidationPipe } from '@/common/pipes/joi.validation.pipe';
@@ -15,6 +16,7 @@ import {
     Param,
     Post,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { FileService } from '../file/services/file.service';
@@ -31,6 +33,7 @@ import {
 import { DocumentService } from './services/document.service';
 
 @Controller('/document')
+@UseGuards(AuthenticationGuard)
 export class DocumentController {
     constructor(
         private readonly logger: Logger,

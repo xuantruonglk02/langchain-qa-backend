@@ -1,12 +1,14 @@
+import { AuthenticationGuard } from '@/common/guards/authentication.guard';
 import { SuccessResponse } from '@/common/helpers/response';
 import { JoiValidationPipe } from '@/common/pipes/joi.validation.pipe';
 import { TrimBodyPipe } from '@/common/pipes/trimBody.pipe';
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { IChat } from './chat.interfaces';
 import { chatBodySchema } from './chat.validators';
 import { ChatService } from './services/chat.service';
 
 @Controller('/chat')
+@UseGuards(AuthenticationGuard)
 export class ChatController {
     constructor(
         private readonly logger: Logger,
