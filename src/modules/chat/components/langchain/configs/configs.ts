@@ -1,4 +1,11 @@
 export const LangchainConfigs = {
+    models: {
+        openAI: {
+            modelName: 'gpt-3.5-turbo',
+            temperature: 0.5,
+            timeout: 5000,
+        },
+    },
     tools: {
         calculator: {
             name: 'Calculator',
@@ -8,6 +15,9 @@ export const LangchainConfigs = {
             name: 'SerpAPI',
             description:
                 'Wrapper around SerpAPI - a real-time API to access Google search results',
+            location: 'Austin,Texas,United States',
+            hl: 'en',
+            gl: 'us',
         },
         vectorStoreQA: {
             name: 'VectorStoreQA',

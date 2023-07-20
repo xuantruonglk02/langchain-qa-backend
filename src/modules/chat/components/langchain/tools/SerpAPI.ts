@@ -8,9 +8,9 @@ dotenv.config();
 export class SerpAPITool extends SerpAPI {
     constructor() {
         super(process.env[ConfigKey.SERPAPI_API_KEY], {
-            location: 'Austin,Texas,United States',
-            hl: 'en',
-            gl: 'us',
+            location: LangchainConfigs.tools.serpAPI.location,
+            hl: LangchainConfigs.tools.serpAPI.hl,
+            gl: LangchainConfigs.tools.serpAPI.gl,
         });
 
         this.name = LangchainConfigs.tools.serpAPI.name;
