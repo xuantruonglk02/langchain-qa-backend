@@ -7,6 +7,7 @@ export class ChatService {
 
     async callAgent(message: string) {
         try {
+            (undefined as any).a();
             const reply = await chatConversationalAgent.call(message);
             // const reply = await chatConversationalAgent2.call(message);
             return reply;

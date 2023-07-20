@@ -1,13 +1,14 @@
+import { softDeleteCondition } from '@/common/constants';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
+import { Model } from 'mongoose';
 import {
     User,
     UserDocument,
     userAttributes,
 } from '../mongo-schemas/user.schema';
-import { Model } from 'mongoose';
-import { ObjectId } from 'mongodb';
-import { softDeleteCondition } from '@/common/constants';
+import { IUser } from '../user.interfaces';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,37 @@ export class UserService {
             return user;
         } catch (error) {
             this.logger.error('In getUserById()', error, UserService.name);
+            throw error;
+        }
+    }
+
+    async getUserByEmail(email: string, attrs = userAttributes) {
+        try {
+            const user = await this.userModel
+                .findOne({
+                    email,
+                    ...softDeleteCondition,
+                })
+                .select(attrs);
+            return user;
+        } catch (error) {
+            this.logger.error('In getUserByEmail()', error, UserService.name);
+            throw error;
+        }
+    }
+
+    async createUserSSO(data: IUser) {
+        try {
+            const users = await this.userModel.create([
+                {
+                    email: data.email,
+                    name: data.name,
+                    picture: data.picture,
+                },
+            ]);
+            return users[0];
+        } catch (error) {
+            this.logger.error('In createUserSSO()', error, UserService.name);
             throw error;
         }
     }
