@@ -5,7 +5,7 @@
 1. Clone this repository
 
     ```bash
-    git clone https://github.com/xuantruonglk02/product-move-be-int3306.git
+    git clone git@github.com:xuantruonglk02/langchain-qa-backend.git
     ```
 
 2. Install dependencies
