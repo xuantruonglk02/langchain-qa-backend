@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import moment from 'moment';
+import { ObjectId } from 'mongodb';
 import { ConfigKey } from '../configs/config-keys';
 import { extractToken } from '../helpers/utility-functions';
 
@@ -24,7 +26,14 @@ export class AuthenticationGuard implements CanActivate {
         }
 
         const decrypt = await this.validateToken(token);
-        request.loggedUser = decrypt;
+        if (moment(decrypt.expiresIn).isSameOrBefore(moment.now())) {
+            throw new UnauthorizedException();
+        }
+
+        request.loggedUser = {
+            ...decrypt,
+            _id: new ObjectId(decrypt._id),
+        };
         request.accessToken = token;
         return true;
     }

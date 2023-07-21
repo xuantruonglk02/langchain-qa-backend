@@ -12,6 +12,7 @@ import {
     Logger,
     Param,
     Query,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
@@ -32,10 +33,14 @@ export class ConversationController {
             new JoiValidationPipe(commonListQuerySchema),
         )
         query: ICommonListQuery,
+        @Req() req: any,
     ) {
         try {
             const listResponse =
-                await this.conversationService.getConversationsList(query);
+                await this.conversationService.getConversationsList(
+                    req.loggedUser._id,
+                    query,
+                );
             return new SuccessResponse(listResponse);
         } catch (error) {
             this.logger.error(

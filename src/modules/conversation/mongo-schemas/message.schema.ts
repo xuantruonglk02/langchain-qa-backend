@@ -30,9 +30,15 @@ export class Message extends BaseEntity {
         required: true,
     })
     content: string;
+
+    @Prop({
+        type: String,
+        required: false,
+    })
+    raw: string;
 }
 
 export type MessageDocument = Message & Document;
 export const MessageSchema = SchemaFactory.createForClass(Message);
 
-export const messageAttributes = ['conversationId', 'type', 'content'];
+export const messageAttributes = ['conversationId', 'type', 'content', 'raw'];

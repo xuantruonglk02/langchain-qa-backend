@@ -7,5 +7,6 @@ export interface ICreateConversation {
 export interface ICreateMessage {
     conversationId: ObjectId;
     type: MessageType;
-    message: string;
+    content: string;
+    raw?: string;
 }

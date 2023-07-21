@@ -51,7 +51,7 @@ export class ConversationService {
         }
     }
 
-    async getConversationsList(query: ICommonListQuery) {
+    async getConversationsList(userId: ObjectId, query: ICommonListQuery) {
         try {
             const {
                 page = DEFAULT_FIRST_PAGE,
@@ -61,6 +61,7 @@ export class ConversationService {
                 orderDirection = DEFAULT_ORDER_DIRECTION,
             } = query;
             const getListQuery: Record<string, any> = {
+                createdBy: userId,
                 ...softDeleteCondition,
             };
             if (keyword) {
@@ -184,9 +185,10 @@ export class ConversationService {
         try {
             const messages = await this.messageModel.create([
                 {
-                    conversationId: data.conversationId,
+                    conversationId: new ObjectId(data.conversationId),
                     type: data.type,
-                    message: data.message,
+                    content: data.content,
+                    raw: data.raw,
                     createdBy: userId ?? null,
                 },
             ]);

@@ -8,6 +8,7 @@ import {
     InternalServerErrorException,
     Logger,
     Post,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import { IChat } from './chat.interfaces';
@@ -26,13 +27,14 @@ export class ChatController {
     async chat(
         @Body(new TrimBodyPipe(), new JoiValidationPipe(chatBodySchema))
         body: IChat,
+        @Req() req: any,
     ) {
         try {
-            const response = await this.chatService.callAgent(body.message);
-            return new SuccessResponse({
-                ...response,
-                reply: response.output,
-            });
+            const aiMessage = await this.chatService.callAgent(
+                body,
+                req.loggedUser._id,
+            );
+            return new SuccessResponse(aiMessage);
         } catch (error) {
             this.logger.error('In chat()', error, ChatController.name);
             throw new InternalServerErrorException(error);
