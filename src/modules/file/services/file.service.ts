@@ -39,10 +39,10 @@ export class FileService {
                 })
                 .select(attrs);
             return file;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getFileByIdAndKey()',
-                error,
+                error.stack,
                 FileService.name,
             );
             throw error;
@@ -90,10 +90,10 @@ export class FileService {
                 );
                 return updatedFile;
             }
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getFileDetailById()',
-                error,
+                error.stack,
                 FileService.name,
             );
             throw error;
@@ -132,8 +132,8 @@ export class FileService {
                 file: files[0],
                 presignedUrlPutObject,
             };
-        } catch (error) {
-            this.logger.error('In uploadFile()', error, FileService.name);
+        } catch (error: any) {
+            this.logger.error('In uploadFile()', error.stack, FileService.name);
             throw error;
         }
     }

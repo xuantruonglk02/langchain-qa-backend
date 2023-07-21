@@ -40,8 +40,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
                 return createUser;
             }
             return user;
-        } catch (error) {
-            this.logger.error('In validate()', error, GoogleStrategy.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In validate()',
+                error.stack,
+                GoogleStrategy.name,
+            );
             throw error;
         }
     }

@@ -39,10 +39,10 @@ export class DocumentService {
                     ...softDeleteCondition,
                 })
                 .select(attrs);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getDocumentById()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;
@@ -98,10 +98,10 @@ export class DocumentService {
                 })),
                 totalItems: total,
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getDocumentList()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;
@@ -117,10 +117,10 @@ export class DocumentService {
                 })
                 .select(['_id']);
             return document;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getDocumentMappedToFile()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;
@@ -136,10 +136,10 @@ export class DocumentService {
                 },
             ]);
             return documents[0];
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createDocument()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;
@@ -157,10 +157,10 @@ export class DocumentService {
                 userId,
             );
             return uploadedFile;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getUrlUploadDocumentToS3()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;
@@ -198,11 +198,11 @@ export class DocumentService {
 
             await session.commitTransaction();
             return document;
-        } catch (error) {
+        } catch (error: any) {
             await session.abortTransaction();
             this.logger.error(
                 'In confirmDocumentUploadedToS3()',
-                error,
+                error.stack,
                 DocumentService.name,
             );
             throw error;

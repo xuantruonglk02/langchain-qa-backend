@@ -33,10 +33,10 @@ export class UserController {
             }
 
             return new SuccessResponse(user);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getUserProfile()',
-                error,
+                error.stack,
                 UserController.name,
             );
             throw new InternalServerErrorException(error);

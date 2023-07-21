@@ -41,10 +41,10 @@ export class AuthService {
                     .add(parseInt(accessTokenExpiresIn), 'milliseconds')
                     .toDate(),
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In generateAccessToken()',
-                error,
+                error.stack,
                 AuthService.name,
             );
             throw error;
@@ -79,10 +79,10 @@ export class AuthService {
                     .add(parseInt(refreshTokenExpiresIn), 'milliseconds')
                     .toDate(),
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In generateRefreshToken()',
-                error,
+                error.stack,
                 AuthService.name,
             );
             throw error;
@@ -102,10 +102,10 @@ export class AuthService {
             } else {
                 return null;
             }
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In verifyRefreshToken()',
-                error,
+                error.stack,
                 AuthService.name,
             );
             throw error;
@@ -122,8 +122,12 @@ export class AuthService {
                 user: req.user,
                 accessToken,
             };
-        } catch (error) {
-            this.logger.error('In googleLogin()', error, AuthService.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In googleLogin()',
+                error.stack,
+                AuthService.name,
+            );
             throw error;
         }
     }

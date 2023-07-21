@@ -35,8 +35,8 @@ export class ChatController {
                 req.loggedUser._id,
             );
             return new SuccessResponse(aiMessage);
-        } catch (error) {
-            this.logger.error('In chat()', error, ChatController.name);
+        } catch (error: any) {
+            this.logger.error('In chat()', error.stack, ChatController.name);
             throw new InternalServerErrorException(error);
         }
     }

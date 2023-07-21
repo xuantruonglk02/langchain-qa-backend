@@ -54,10 +54,10 @@ export class DocumentController {
             const documentList =
                 await this.documentService.getDocumentDetailsList(query);
             return new SuccessResponse(documentList);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getDocumentList()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -102,10 +102,10 @@ export class DocumentController {
                     req.loggedUser._id,
                 );
             return new SuccessResponse(uploadFile);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getUrlUploadDocument()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -127,10 +127,10 @@ export class DocumentController {
                 req.loggedUser._id,
             );
             return new SuccessResponse(document);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createDocument()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -212,10 +212,10 @@ export class DocumentController {
             }
 
             return new SuccessResponse(updatedDocument);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In confirmDocumentUploaded()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);

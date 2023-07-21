@@ -32,8 +32,12 @@ export class UserService {
                 .select(attrs)
                 .lean();
             return user;
-        } catch (error) {
-            this.logger.error('In getUserById()', error, UserService.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In getUserById()',
+                error.stack,
+                UserService.name,
+            );
             throw error;
         }
     }
@@ -48,8 +52,12 @@ export class UserService {
                 .select(attrs)
                 .lean();
             return user;
-        } catch (error) {
-            this.logger.error('In getUserByEmail()', error, UserService.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In getUserByEmail()',
+                error.stack,
+                UserService.name,
+            );
             throw error;
         }
     }
@@ -80,9 +88,13 @@ export class UserService {
             await session.commitTransaction();
 
             return await this.getUserById(user._id);
-        } catch (error) {
+        } catch (error: any) {
             await session.abortTransaction();
-            this.logger.error('In createUserSSO()', error, UserService.name);
+            this.logger.error(
+                'In createUserSSO()',
+                error.stack,
+                UserService.name,
+            );
             throw error;
         } finally {
             session.endSession();

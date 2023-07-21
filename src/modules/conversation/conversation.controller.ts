@@ -42,10 +42,10 @@ export class ConversationController {
                     query,
                 );
             return new SuccessResponse(listResponse);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getConversationsList()',
-                error,
+                error.stack,
                 ConversationController.name,
             );
             throw new InternalServerErrorException(error);
@@ -67,10 +67,10 @@ export class ConversationController {
                 query,
             );
             return new SuccessResponse(listResponse);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getMessagesList()',
-                error,
+                error.stack,
                 ConversationController.name,
             );
             throw new InternalServerErrorException(error);

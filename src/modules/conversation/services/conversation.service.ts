@@ -41,10 +41,10 @@ export class ConversationService {
                 })
                 .select(attrs);
             return conversation;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getConversationById()',
-                error,
+                error.stack,
                 ConversationService.name,
             );
             throw error;
@@ -93,10 +93,10 @@ export class ConversationService {
                 items: conversationList,
                 totalItems: total,
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getConversationsList()',
-                error,
+                error.stack,
                 ConversationService.name,
             );
             throw error;
@@ -145,10 +145,10 @@ export class ConversationService {
                 items: messageList,
                 totalItems: total,
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getMessagesList()',
-                error,
+                error.stack,
                 ConversationService.name,
             );
             throw error;
@@ -171,10 +171,10 @@ export class ConversationService {
                 { session },
             );
             return conversations[0];
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createConversation()',
-                error,
+                error.stack,
                 ConversationService.name,
             );
             throw error;
@@ -193,10 +193,10 @@ export class ConversationService {
                 },
             ]);
             return messages[0];
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createMessageInConversation()',
-                error,
+                error.stack,
                 ConversationService.name,
             );
             throw error;

@@ -52,10 +52,10 @@ export class AuthController {
                     },
                 }),
             );
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In googleAuthCallback()',
-                error,
+                error.stack,
                 AuthController.name,
             );
             throw new InternalServerErrorException(error);
