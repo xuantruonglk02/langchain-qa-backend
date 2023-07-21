@@ -1,9 +1,9 @@
 import { MessageType } from '@/modules/conversation/conversation.constants';
 import { ConversationService } from '@/modules/conversation/services/conversation.service';
+import { ChatConversationalAgent } from '@/modules/langchain/agents/ChatConversationAgent';
 import { Injectable, Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { IChat } from '../chat.interfaces';
-import { chatConversationalAgent } from '../../langchain/agents/ChatConversationAgent';
 
 @Injectable()
 export class ChatService {
@@ -14,6 +14,9 @@ export class ChatService {
 
     async callAgent(body: IChat, userId: ObjectId) {
         try {
+            const chatAgent = new ChatConversationalAgent();
+            await chatAgent.initialize(body.conversationId.toString());
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [_, aiResponse] = await Promise.all([
                 this.conversationService.createMessageInConversation(
@@ -24,7 +27,7 @@ export class ChatService {
                     },
                     userId,
                 ),
-                chatConversationalAgent.call(body.message),
+                chatAgent.call(body.message),
             ]);
             const aiReply = aiResponse.output;
             const aiMessage =
@@ -35,8 +38,8 @@ export class ChatService {
                     raw: JSON.stringify(aiResponse),
                 });
             return aiMessage;
-        } catch (error) {
-            this.logger.error('In callAgent()', error, ChatService.name);
+        } catch (error: any) {
+            this.logger.error('In callAgent()', error.stack, ChatService.name);
             throw error;
         }
     }
