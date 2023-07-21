@@ -3,7 +3,7 @@ import { ConversationService } from '@/modules/conversation/services/conversatio
 import { Injectable, Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { IChat } from '../chat.interfaces';
-import { chatConversationalAgent } from '../components/langchain/agents/ChatConversationAgent';
+import { chatConversationalAgent } from '../../langchain/agents/ChatConversationAgent';
 
 @Injectable()
 export class ChatService {
