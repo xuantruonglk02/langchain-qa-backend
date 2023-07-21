@@ -9,8 +9,7 @@ import {
 } from '../configs/prompts';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
 import { CalculatorTool } from '../tools/Calculator';
-import { Constitution } from '../tools/Constitution';
-import { TruthQATool } from '../tools/TruthQA';
+import { SerpAPITool } from '../tools/SerpAPI';
 import { VectorStoreQATool } from '../tools/VectorStoreQA';
 
 class ChatConversationalAgent {
@@ -19,11 +18,11 @@ class ChatConversationalAgent {
     async initialize() {
         try {
             const tools = [
-                new Constitution(),
+                // new Constitution(),
                 new CalculatorTool(),
                 new VectorStoreQATool(),
-                new TruthQATool(),
-                // new SerpAPITool(),
+                // new TruthQATool(),
+                new SerpAPITool(),
             ];
 
             this.executor = await initializeAgentExecutorWithOptions(
