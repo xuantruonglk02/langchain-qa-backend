@@ -1,18 +1,17 @@
 import { ConfigKey } from '@/common/configs/config-keys';
 import dotenv from 'dotenv';
 import { ChatOpenAI as ChatOpenAILangchain } from 'langchain/chat_models/openai';
+import { LangchainConfigs } from '../configs/configs';
 
 dotenv.config();
 
 class ChatOpenAI extends ChatOpenAILangchain {
     constructor() {
         super({
-            modelName: process.env[ConfigKey.OPENAI_MODEL_NAME],
+            modelName: LangchainConfigs.models.openAI.modelName,
+            temperature: LangchainConfigs.models.openAI.temperature,
+            // timeout: LangchainConfigs.models.openAI.timeout,
             openAIApiKey: process.env[ConfigKey.OPENAI_API_KEY],
-            temperature: parseInt(
-                process.env[ConfigKey.OPENAI_TEMPERATURE] as string,
-            ),
-            // timeout: 5000,
             verbose: process.env[ConfigKey.OPENAI_VERBOSE] === 'true',
         });
     }
