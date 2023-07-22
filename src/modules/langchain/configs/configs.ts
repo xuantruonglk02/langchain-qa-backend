@@ -6,10 +6,21 @@ export const LangchainConfigs = {
             timeout: 5000,
         },
     },
+    memory: {
+        redisChatMemory: {
+            sessionTTL: 3600,
+            k: 100,
+        },
+    },
     tools: {
         calculator: {
             name: 'Calculator',
             description: 'Perform calculations on response',
+        },
+        constitution: {
+            name: 'Constitution',
+            description:
+                'Provides principles for the content of the conversation to follow',
         },
         serpAPI: {
             name: 'SerpAPI',
@@ -19,19 +30,14 @@ export const LangchainConfigs = {
             hl: 'en',
             gl: 'us',
         },
+        truthQA: {
+            name: 'TheTruth',
+            description: 'Provides absolutely accurate and factual information',
+        },
         vectorStoreQA: {
             name: 'VectorStoreQA',
             description:
                 "Gives agent the ability to access and find information in user's documents.",
-        },
-        constitution: {
-            name: 'Constitution',
-            description:
-                'Provides principles for the content of the conversation to follow',
-        },
-        truthQA: {
-            name: 'TheTruth',
-            description: 'Provides absolutely accurate and factual information',
         },
     },
 };

@@ -1,3 +1,4 @@
+import { AuthenticationGuard } from '@/common/guards/authentication.guard';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import {
     Controller,
@@ -6,10 +7,12 @@ import {
     InternalServerErrorException,
     Logger,
     Req,
+    UseGuards,
 } from '@nestjs/common';
 import { UserService } from './services/user.service';
 
 @Controller('/user')
+@UseGuards(AuthenticationGuard)
 export class UserController {
     constructor(
         private readonly logger: Logger,
@@ -23,17 +26,17 @@ export class UserController {
             if (!user) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);
             }
 
             return new SuccessResponse(user);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getUserProfile()',
-                error,
+                error.stack,
                 UserController.name,
             );
             throw new InternalServerErrorException(error);

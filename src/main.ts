@@ -6,9 +6,8 @@ import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 import { ConfigKey } from './common/configs/config-keys';
-import { chatConversationalAgent } from './modules/chat/components/langchain/agents/ChatConversationAgent';
-import { pineconeData } from './modules/chat/components/langchain/models/PineconeData';
-import { pineconeTruth } from './modules/chat/components/langchain/models/PineconeTruthData';
+import { pineconeData } from './modules/langchain/models/PineconeData';
+import { pineconeTruth } from './modules/langchain/models/PineconeTruthData';
 import './plugins/moment';
 
 async function bootstrap() {
@@ -40,7 +39,6 @@ async function bootstrap() {
 
     await pineconeData.initialize();
     await pineconeTruth.initialize();
-    await chatConversationalAgent.initialize();
 
     await app.listen(configService.get(ConfigKey.APP_PORT) as string);
 }

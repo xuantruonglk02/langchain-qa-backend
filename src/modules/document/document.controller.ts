@@ -1,4 +1,5 @@
 import { commonListQuerySchema } from '@/common/constants';
+import { AuthenticationGuard } from '@/common/guards/authentication.guard';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import { ICommonListQuery } from '@/common/interfaces';
 import { JoiValidationPipe } from '@/common/pipes/joi.validation.pipe';
@@ -15,6 +16,8 @@ import {
     Param,
     Post,
     Query,
+    Req,
+    UseGuards,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { FileService } from '../file/services/file.service';
@@ -31,6 +34,7 @@ import {
 import { DocumentService } from './services/document.service';
 
 @Controller('/document')
+@UseGuards(AuthenticationGuard)
 export class DocumentController {
     constructor(
         private readonly logger: Logger,
@@ -50,10 +54,10 @@ export class DocumentController {
             const documentList =
                 await this.documentService.getDocumentDetailsList(query);
             return new SuccessResponse(documentList);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getDocumentList()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -68,6 +72,7 @@ export class DocumentController {
             new JoiValidationPipe(getUrlUploadDocumentQuerySchema),
         )
         query: IGetUrlUploadDocument,
+        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.getDocumentById(id, [
@@ -77,7 +82,7 @@ export class DocumentController {
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);
@@ -85,7 +90,7 @@ export class DocumentController {
             if (document.fileId) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'id',
                     },
                 ]);
@@ -94,13 +99,13 @@ export class DocumentController {
             const uploadFile =
                 await this.documentService.getUrlUploadDocumentToS3(
                     query.fileExtension,
-                    null as any,
+                    req.loggedUser._id,
                 );
             return new SuccessResponse(uploadFile);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In getUrlUploadDocument()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -114,17 +119,18 @@ export class DocumentController {
             new JoiValidationPipe(createDocumentBodySchema),
         )
         body: ICreateDocument,
+        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.createDocument(
                 body,
-                null as any,
+                req.loggedUser._id,
             );
             return new SuccessResponse(document);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createDocument()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);
@@ -139,6 +145,7 @@ export class DocumentController {
             new JoiValidationPipe(confirmDocumentUploadedBodySchema),
         )
         body: IConfirmDocumentUploaded,
+        @Req() req: any,
     ) {
         try {
             const document = await this.documentService.getDocumentById(id, [
@@ -148,7 +155,7 @@ export class DocumentController {
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'id',
                     },
                 ]);
@@ -156,7 +163,7 @@ export class DocumentController {
             if (document.fileId) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'id',
                     },
                 ]);
@@ -169,7 +176,7 @@ export class DocumentController {
             if (isFileMapped) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
                     {
-                        code: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                         key: 'fileId',
                     },
                 ]);
@@ -183,7 +190,7 @@ export class DocumentController {
             if (!file) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'fileId',
                     },
                 ]);
@@ -193,22 +200,22 @@ export class DocumentController {
                 await this.documentService.confirmDocumentUploadedToS3(
                     id,
                     body.fileId,
-                    null as any,
+                    req.loggedUser._id,
                 );
             if (!updatedDocument) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
-                        code: HttpStatus.NOT_FOUND,
+                        statusCode: HttpStatus.NOT_FOUND,
                         key: 'fileId',
                     },
                 ]);
             }
 
             return new SuccessResponse(updatedDocument);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In confirmDocumentUploaded()',
-                error,
+                error.stack,
                 DocumentController.name,
             );
             throw new InternalServerErrorException(error);

@@ -43,10 +43,10 @@ export class S3AWSService {
                 ) as unknown as number,
             });
             return signedUrl;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createPresignedUrlGetObject()',
-                error,
+                error.stack,
                 S3AWSService.name,
             );
             throw error;
@@ -65,10 +65,10 @@ export class S3AWSService {
                 ) as unknown as number,
             });
             return signedUrl;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(
                 'In createPresignedUrlPutObject()',
-                error,
+                error.stack,
                 S3AWSService.name,
             );
             throw error;
@@ -83,8 +83,12 @@ export class S3AWSService {
             });
             const response = await this.s3Client.send(command);
             return response.Contents?.map((object: any) => object.Key) ?? [];
-        } catch (error) {
-            this.logger.error('In getObjectKeys()', error, S3AWSService.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In getObjectKeys()',
+                error.stack,
+                S3AWSService.name,
+            );
             throw error;
         }
     }
@@ -98,8 +102,12 @@ export class S3AWSService {
                 },
             });
             return await this.s3Client.send(command);
-        } catch (error) {
-            this.logger.error('In deleteObjects()', error, S3AWSService.name);
+        } catch (error: any) {
+            this.logger.error(
+                'In deleteObjects()',
+                error.stack,
+                S3AWSService.name,
+            );
             throw error;
         }
     }

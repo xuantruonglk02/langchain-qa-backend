@@ -12,6 +12,17 @@ services:
         networks:
             - api-network
         restart: always
+        depends_on:
+            - redis
+    redis:
+        image: redis:6.0.20
+        ports:
+            - 6379:6379
+        networks:
+            - api-network
+        volumes:
+            - ./data/redis:/data
+        restart: always
 networks:
     api-network:
         driver: bridge

@@ -7,22 +7,24 @@ import {
     CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
     CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
 } from '../configs/prompts';
+import { RedisChatMemory } from '../memory/RedisChatMemory';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
 import { CalculatorTool } from '../tools/Calculator';
-import { SerpAPITool } from '../tools/SerpAPI';
 import { VectorStoreQATool } from '../tools/VectorStoreQA';
 
-class ChatConversationalAgent {
+export class ChatConversationalAgent {
     private executor: AgentExecutor;
 
-    async initialize() {
+    async initialize(conversationId: string) {
         try {
+            const memory = new RedisChatMemory(conversationId);
+
             const tools = [
                 // new Constitution(),
                 new CalculatorTool(),
                 new VectorStoreQATool(),
                 // new TruthQATool(),
-                new SerpAPITool(),
+                // new SerpAPITool(),
             ];
 
             this.executor = await initializeAgentExecutorWithOptions(
@@ -35,6 +37,7 @@ class ChatConversationalAgent {
                         systemMessage: CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
                         humanMessage: CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
                     },
+                    memory: memory,
                 },
             );
         } catch (error) {
@@ -53,5 +56,3 @@ class ChatConversationalAgent {
         }
     }
 }
-
-export const chatConversationalAgent = new ChatConversationalAgent();

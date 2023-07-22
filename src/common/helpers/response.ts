@@ -7,7 +7,7 @@ const { VERSION: version = '0.0.0' } = process.env;
 
 export interface IErrorResponse {
     key: string;
-    code: HttpStatus;
+    statusCode: HttpStatus;
     message?: string;
 }
 
@@ -15,7 +15,7 @@ export class SuccessResponse {
     constructor(data = {}, message = 'Success') {
         return {
             success: true,
-            code: HttpStatus.OK,
+            statusCode: HttpStatus.OK,
             message,
             data,
             version,
@@ -25,13 +25,13 @@ export class SuccessResponse {
 
 export class ErrorResponse {
     constructor(
-        code = HttpStatus.INTERNAL_SERVER_ERROR,
+        statusCode = HttpStatus.INTERNAL_SERVER_ERROR,
         errors: IErrorResponse[],
         message = 'Error',
     ) {
         return {
             success: false,
-            code,
+            statusCode,
             message,
             errors,
             version,
@@ -41,7 +41,7 @@ export class ErrorResponse {
 
 @Injectable()
 export class ApiResponse<T> {
-    public code: number;
+    public statusCode: number;
 
     public message: string;
 
