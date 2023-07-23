@@ -1,6 +1,6 @@
 import { commonListQuerySchema } from '@/common/constants';
 import { AuthenticationGuard } from '@/common/guards/authentication.guard';
-import { SuccessResponse } from '@/common/helpers/response';
+import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import { ICommonListQuery } from '@/common/interfaces';
 import { JoiValidationPipe } from '@/common/pipes/joi.validation.pipe';
 import { ParseObjectIdPipe } from '@/common/pipes/objectId.validation.pipe';
@@ -8,6 +8,7 @@ import { RemoveEmptyQueryPipe } from '@/common/pipes/removeEmptyQuery.pipe';
 import {
     Controller,
     Get,
+    HttpStatus,
     InternalServerErrorException,
     Logger,
     Param,
@@ -60,8 +61,33 @@ export class ConversationController {
             new JoiValidationPipe(commonListQuerySchema),
         )
         query: ICommonListQuery,
+        @Req() req: any,
     ) {
         try {
+            const conversation =
+                await this.conversationService.getConversationById(id, [
+                    'createdBy',
+                ]);
+            if (!conversation) {
+                return new ErrorResponse(HttpStatus.NOT_FOUND, [
+                    {
+                        statusCode: HttpStatus.NOT_FOUND,
+                        key: 'id',
+                    },
+                ]);
+            }
+            if (
+                req.loggedUser._id.toString() !==
+                conversation.createdBy.toString()
+            ) {
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
+                    {
+                        statusCode: HttpStatus.FORBIDDEN,
+                        key: 'id',
+                    },
+                ]);
+            }
+
             const listResponse = await this.conversationService.getMessagesList(
                 id,
                 query,

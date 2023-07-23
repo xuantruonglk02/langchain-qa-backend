@@ -49,7 +49,7 @@ export class DocumentService {
         }
     }
 
-    async getDocumentDetailsList(query: ICommonListQuery) {
+    async getDocumentDetailsList(userId: ObjectId, query: ICommonListQuery) {
         try {
             const {
                 page = DEFAULT_FIRST_PAGE,
@@ -59,6 +59,7 @@ export class DocumentService {
                 orderDirection = DEFAULT_ORDER_DIRECTION,
             } = query;
             const getListQuery: Record<string, any> = {
+                createdBy: userId,
                 ...softDeleteCondition,
             };
             if (keyword) {

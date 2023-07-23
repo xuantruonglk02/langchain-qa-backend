@@ -1,11 +1,14 @@
 import { ConfigKey } from '@/common/configs/config-keys';
+import { getEnvFilePath } from '@/common/helpers/utility-functions';
 import { PineconeClient } from '@pinecone-database/pinecone';
 import { VectorOperationsApi } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch';
 import dotenv from 'dotenv';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { openAIEmbeddings } from './OpenAIEmbeddings';
 
-dotenv.config();
+dotenv.config({
+    path: getEnvFilePath(),
+});
 
 class PineconeTruthData {
     private readonly client: PineconeClient;

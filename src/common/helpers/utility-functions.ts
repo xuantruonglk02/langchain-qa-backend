@@ -4,3 +4,7 @@ export function extractToken(authorization = '') {
     }
     return '';
 }
+
+export function getEnvFilePath() {
+    return process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env`;
+}

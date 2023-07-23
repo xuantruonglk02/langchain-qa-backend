@@ -49,10 +49,14 @@ export class DocumentController {
             new JoiValidationPipe(commonListQuerySchema),
         )
         query: ICommonListQuery,
+        @Req() req: any,
     ) {
         try {
             const documentList =
-                await this.documentService.getDocumentDetailsList(query);
+                await this.documentService.getDocumentDetailsList(
+                    req.loggedUser._id,
+                    query,
+                );
             return new SuccessResponse(documentList);
         } catch (error: any) {
             this.logger.error(
@@ -78,11 +82,22 @@ export class DocumentController {
             const document = await this.documentService.getDocumentById(id, [
                 '_id',
                 'fileId',
+                'createdBy',
             ]);
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
                         statusCode: HttpStatus.NOT_FOUND,
+                        key: 'id',
+                    },
+                ]);
+            }
+            if (
+                req.loggedUser._id.toString() !== document.createdBy.toString()
+            ) {
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
+                    {
+                        statusCode: HttpStatus.FORBIDDEN,
                         key: 'id',
                     },
                 ]);
@@ -151,11 +166,22 @@ export class DocumentController {
             const document = await this.documentService.getDocumentById(id, [
                 '_id',
                 'fileId',
+                'createdBy',
             ]);
             if (!document) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
                     {
                         statusCode: HttpStatus.NOT_FOUND,
+                        key: 'id',
+                    },
+                ]);
+            }
+            if (
+                req.loggedUser._id.toString() !== document.createdBy.toString()
+            ) {
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
+                    {
+                        statusCode: HttpStatus.FORBIDDEN,
                         key: 'id',
                     },
                 ]);
@@ -171,7 +197,7 @@ export class DocumentController {
 
             const isFileMapped =
                 await this.documentService.checkDocumentMappedToFile(
-                    body.fileId,
+                    new ObjectId(body.fileId),
                 );
             if (isFileMapped) {
                 return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
@@ -183,9 +209,9 @@ export class DocumentController {
             }
 
             const file = await this.fileService.getFileByIdAndKey(
-                body.fileId,
+                new ObjectId(body.fileId),
                 body.fileKey,
-                ['_id'],
+                ['_id', 'createdBy'],
             );
             if (!file) {
                 return new ErrorResponse(HttpStatus.NOT_FOUND, [
@@ -195,11 +221,19 @@ export class DocumentController {
                     },
                 ]);
             }
+            if (req.loggedUser._id.toString() !== file.createdBy.toString()) {
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
+                    {
+                        statusCode: HttpStatus.FORBIDDEN,
+                        key: 'fileId',
+                    },
+                ]);
+            }
 
             const updatedDocument =
                 await this.documentService.confirmDocumentUploadedToS3(
                     id,
-                    body.fileId,
+                    file._id,
                     req.loggedUser._id,
                 );
             if (!updatedDocument) {

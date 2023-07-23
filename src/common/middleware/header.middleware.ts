@@ -2,8 +2,11 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
 import { TIMEZONE_HEADER, TIMEZONE_NAME_HEADER } from '../constants';
+import { getEnvFilePath } from '../helpers/utility-functions';
 
-dotenv.config();
+dotenv.config({
+    path: getEnvFilePath(),
+});
 
 const DEFAULT_TIMEZONE_NAME = process.env.TIMEZONE_DEFAULT_NAME;
 const DEFAULT_TIMEZONE = process.env.TIMEZONE_DEFAULT;

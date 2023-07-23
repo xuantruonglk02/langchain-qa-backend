@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start": "nest start",
-        "dev": "nest start --watch",
+        "dev": "NODE_ENV=local nest start --watch",
         "prod": "node dist/main",
         "build": "nest build",
         "prepare": "husky install",

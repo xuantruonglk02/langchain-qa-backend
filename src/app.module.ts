@@ -16,9 +16,12 @@ import { ConversationModule } from './modules/conversation/conversation.module';
 import { DocumentModule } from './modules/document/document.module';
 import { UserModule } from './modules/user/user.module';
 
+const NODE_ENV = process.env.NODE_ENV;
+
 @Module({
     imports: [
         ConfigModule.forRoot({
+            envFilePath: NODE_ENV ? `.env.${NODE_ENV}` : `.env`,
             isGlobal: true,
         }),
         ScheduleModule.forRoot(),
@@ -42,7 +45,6 @@ import { UserModule } from './modules/user/user.module';
             useClass: TransformInterceptor,
         },
     ],
-    exports: [],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

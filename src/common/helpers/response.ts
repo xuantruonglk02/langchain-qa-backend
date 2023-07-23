@@ -1,7 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import dotenv from 'dotenv';
+import { getEnvFilePath } from './utility-functions';
 
-dotenv.config();
+dotenv.config({
+    path: getEnvFilePath(),
+});
 
 const { VERSION: version = '0.0.0' } = process.env;
 

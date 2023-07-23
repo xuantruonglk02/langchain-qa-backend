@@ -1,9 +1,12 @@
 import { ConfigKey } from '@/common/configs/config-keys';
+import { getEnvFilePath } from '@/common/helpers/utility-functions';
 import dotenv from 'dotenv';
 import { SerpAPI } from 'langchain/tools';
 import { LangchainConfigs } from '../configs/configs';
 
-dotenv.config();
+dotenv.config({
+    path: getEnvFilePath(),
+});
 
 export class SerpAPITool extends SerpAPI {
     constructor() {

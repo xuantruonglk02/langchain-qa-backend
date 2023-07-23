@@ -2,6 +2,7 @@ import { MongoCollection } from '@/common/constants';
 import { BaseEntity } from '@/common/mongo-schemas/base.schema';
 import { File } from '@/modules/file/mongo-schemas/file.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import { Document as MongooseDocument, Types } from 'mongoose';
 
 @Schema({
@@ -22,7 +23,7 @@ export class Document extends BaseEntity {
         required: false,
         default: null,
     })
-    fileId: string;
+    fileId: ObjectId;
 }
 
 export type DocumentDocument = Document & MongooseDocument;

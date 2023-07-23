@@ -1,8 +1,11 @@
 import { ConfigKey } from '@/common/configs/config-keys';
+import { getEnvFilePath } from '@/common/helpers/utility-functions';
 import dotenv from 'dotenv';
 import { OpenAIEmbeddings as OpenAIEmbeddingsLangchain } from 'langchain/embeddings/openai';
 
-dotenv.config();
+dotenv.config({
+    path: getEnvFilePath(),
+});
 
 class OpenAIEmbeddings extends OpenAIEmbeddingsLangchain {
     constructor() {
