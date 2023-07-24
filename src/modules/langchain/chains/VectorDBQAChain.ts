@@ -1,15 +1,16 @@
 import {
     VectorDBQAChain as VectorDBQAChainLangchain,
-    loadQARefineChain,
+    loadQAStuffChain,
 } from 'langchain/chains';
+import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { openAIModel } from '../models/OpenAI';
-import { pineconeData } from '../models/PineconeData';
 
 export class VectorDBQAChain extends VectorDBQAChainLangchain {
-    constructor() {
-        const combineDocumentsChain = loadQARefineChain(openAIModel);
+    constructor(vectorStore: PineconeStore) {
+        const combineDocumentsChain = loadQAStuffChain(openAIModel);
+
         super({
-            vectorstore: pineconeData.vectorStore,
+            vectorstore: vectorStore,
             combineDocumentsChain,
         });
     }

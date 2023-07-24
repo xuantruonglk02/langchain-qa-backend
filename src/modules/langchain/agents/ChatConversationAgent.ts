@@ -7,22 +7,27 @@ import {
     CHAT_CONVERSATION_AGENT_HUMAN_MESSAGE,
     CHAT_CONVERSATION_AGENT_SYSTEM_MESSAGE,
 } from '../configs/prompts';
+import { IInitializeAgentOptions } from '../langchain.interfaces';
 import { RedisChatMemory } from '../memory/RedisChatMemory';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
-import { CalculatorTool } from '../tools/Calculator';
-import { VectorStoreQATool } from '../tools/VectorStoreQA';
+import { pineconeData } from '../models/PineconeData';
+import { CalculatorTool } from '../tools/CalculatorTool';
+import { VectorStoreQATool } from '../tools/VectorStoreQATool';
 
 export class ChatConversationalAgent {
     private executor: AgentExecutor;
 
-    async initialize(conversationId: string) {
+    async initialize(options: IInitializeAgentOptions) {
         try {
-            const memory = new RedisChatMemory(conversationId);
+            const memory = new RedisChatMemory(options.conversationId);
+            const vectorStore = await pineconeData.createVectorStore(
+                options.vectorStoreQuery,
+            );
 
             const tools = [
                 // new Constitution(),
                 new CalculatorTool(),
-                new VectorStoreQATool(),
+                new VectorStoreQATool(vectorStore),
                 // new TruthQATool(),
                 // new SerpAPITool(),
             ];
