@@ -3,8 +3,10 @@ export enum FileType {
 }
 
 export enum DocumentExtension {
+    CSV = 'csv',
     DOCX = 'docx',
     PDF = 'pdf',
+    TXT = 'txt',
 }
 
 export const S3FilePath = {
