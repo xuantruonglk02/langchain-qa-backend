@@ -12,6 +12,7 @@ import { RedisChatMemory } from '../memory/RedisChatMemory';
 import { chatOpenAIModel } from '../models/ChatOpenAI';
 import { pineconeData } from '../models/PineconeData';
 import { CalculatorTool } from '../tools/CalculatorTool';
+import { TruthQATool } from '../tools/TruthQATool';
 import { VectorStoreQATool } from '../tools/VectorStoreQATool';
 
 export class ChatConversationalAgent {
@@ -28,7 +29,7 @@ export class ChatConversationalAgent {
                 // new Constitution(),
                 new CalculatorTool(),
                 new VectorStoreQATool(vectorStore),
-                // new TruthQATool(),
+                new TruthQATool(),
                 // new SerpAPITool(),
             ];
 
