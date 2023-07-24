@@ -15,7 +15,12 @@ export class ChatService {
     async callAgent(body: IChat, userId: ObjectId) {
         try {
             const chatAgent = new ChatConversationalAgent();
-            await chatAgent.initialize(body.conversationId.toString());
+            await chatAgent.initialize({
+                conversationId: body.conversationId.toString(),
+                vectorStoreQuery: {
+                    userId: userId.toString(),
+                },
+            });
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [_, aiResponse] = await Promise.all([
