@@ -28,7 +28,7 @@
         "@nestjs/mongoose": "^9.2.1",
         "@nestjs/passport": "^10.0.0",
         "@nestjs/platform-express": "^9.4.3",
-        "@nestjs/schedule": "^2.1.0",
+        "@nestjs/schedule": "^2.2.3",
         "@pinecone-database/pinecone": "^0.1.6",
         "class-validator": "^0.14.0",
         "cross-env": "^7.0.3",

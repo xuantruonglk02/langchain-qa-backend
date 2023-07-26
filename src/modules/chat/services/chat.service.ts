@@ -20,7 +20,7 @@ export class ChatService {
                 this.conversationService.createMessageInConversation(
                     {
                         conversationId: body.conversationId,
-                        type: MessageType.USER,
+                        type: MessageType.HUMAN,
                         content: body.message,
                     },
                     userId,

@@ -26,4 +26,17 @@ export class LangchainService {
             throw error;
         }
     }
+
+    async censorDocument(fileId: string) {
+        try {
+            // TODO: check
+        } catch (error: any) {
+            this.logger.error(
+                'In censorDocument()',
+                error.stack,
+                LangchainService.name,
+            );
+            throw error;
+        }
+    }
 }

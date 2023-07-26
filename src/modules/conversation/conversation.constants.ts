@@ -1,4 +1,4 @@
 export enum MessageType {
     AI = 'ai',
-    USER = 'user',
+    HUMAN = 'human',
 }

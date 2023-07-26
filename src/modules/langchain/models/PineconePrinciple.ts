@@ -10,7 +10,7 @@ dotenv.config({
     path: getEnvFilePath(),
 });
 
-class PineconeTruthData {
+class PineconePrinciple {
     private readonly client: PineconeClient;
     private index: VectorOperationsApi;
     public vectorStore: PineconeStore;
@@ -22,13 +22,15 @@ class PineconeTruthData {
     async initialize() {
         try {
             await this.client.init({
-                apiKey: process.env[ConfigKey.PINECONE_TRUTH_API_KEY] as string,
+                apiKey: process.env[
+                    ConfigKey.PINECONE_PRINCIPLE_API_KEY
+                ] as string,
                 environment: process.env[
-                    ConfigKey.PINECONE_TRUTH_ENVIRONMENT
+                    ConfigKey.PINECONE_PRINCIPLE_ENVIRONMENT
                 ] as string,
             });
             this.index = this.client.Index(
-                process.env[ConfigKey.PINECONE_TRUTH_INDEX] as string,
+                process.env[ConfigKey.PINECONE_PRINCIPLE_INDEX] as string,
             );
             this.vectorStore = await PineconeStore.fromExistingIndex(
                 openAIEmbeddings,
@@ -42,4 +44,4 @@ class PineconeTruthData {
     }
 }
 
-export const pineconeTruth = new PineconeTruthData();
+export const pineconePrinciple = new PineconePrinciple();
