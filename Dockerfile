@@ -11,5 +11,5 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-CMD ["npm", "run", "start:trace"]
+CMD ["npm", "start"]
 EXPOSE 3000
