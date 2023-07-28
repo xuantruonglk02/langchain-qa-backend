@@ -37,9 +37,12 @@ async function bootstrap() {
     // use winston for logger
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-    await pineconeData.initialize();
-    await pineconeTruth.initialize();
+    await initialize();
 
     await app.listen(configService.get(ConfigKey.APP_PORT) as string);
 }
 bootstrap();
+
+async function initialize() {
+    await Promise.all([pineconeData.initialize(), pineconeTruth.initialize()]);
+}
