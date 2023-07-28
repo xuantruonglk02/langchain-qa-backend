@@ -8,6 +8,7 @@
     "scripts": {
         "start": "nest start",
         "dev": "NODE_ENV=local nest start --watch",
+        "dev:trace": "LANGCHAIN_TRACING_V2=true && NODE_ENV=local nest start --watch",
         "prod": "node dist/main",
         "build": "nest build",
         "prepare": "husky install",

@@ -13,7 +13,7 @@ export class ChatService {
         private readonly langchainService: LangchainService,
     ) {}
 
-    async callAgent(body: IChat, userId: ObjectId) {
+    async chatInConversation(body: IChat, userId: ObjectId) {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [_, aiResponse] = await Promise.all([
@@ -41,7 +41,11 @@ export class ChatService {
                 });
             return aiMessage;
         } catch (error: any) {
-            this.logger.error('In callAgent()', error.stack, ChatService.name);
+            this.logger.error(
+                'In chatInConversation()',
+                error.stack,
+                ChatService.name,
+            );
             throw error;
         }
     }

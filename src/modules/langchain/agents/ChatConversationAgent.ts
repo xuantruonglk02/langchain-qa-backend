@@ -26,7 +26,6 @@ export class ChatConversationalAgent {
             );
 
             const tools = [
-                // new Constitution(),
                 new CalculatorTool(),
                 new PrincipleTool(),
                 new VectorStoreQATool(vectorStore),
