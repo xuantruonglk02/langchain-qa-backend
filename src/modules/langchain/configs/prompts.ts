@@ -24,3 +24,10 @@ USER'S INPUT
 Here is the user's input. (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):
 
 {{input}}`;
+
+export const SUMMARIZE_PRINCIPLES_PROMPT_TEMPLATE = `Summarize the text bellow as a bullet point list of the most important points.
+Text: """
+{input}
+"""`;
+export const CHECK_PRINCIPLES_PROMPT_TEMPLATE = `Does the sentence: "{input}" contradict with the following: "{principles}"?
+THINK STEP BY STEP. JUST ANSWER IN ONE OF [yes, no].`;

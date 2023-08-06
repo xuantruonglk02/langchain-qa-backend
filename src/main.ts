@@ -44,8 +44,12 @@ async function bootstrap() {
 bootstrap();
 
 async function initialize() {
-    await Promise.all([
-        pineconeData.initialize(),
-        pineconePrinciple.initialize(),
-    ]);
+    try {
+        await Promise.all([
+            pineconeData.initialize(),
+            pineconePrinciple.initialize(),
+        ]);
+    } catch (error) {
+        throw error;
+    }
 }
