@@ -7,7 +7,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 import { ConfigKey } from './common/configs/config-keys';
 import { pineconeData } from './modules/langchain/models/PineconeData';
-import { pineconeTruth } from './modules/langchain/models/PineconeTruthData';
+import { pineconePrinciple } from './modules/langchain/models/PineconePrinciple';
 import './plugins/moment';
 
 async function bootstrap() {
@@ -44,5 +44,8 @@ async function bootstrap() {
 bootstrap();
 
 async function initialize() {
-    await Promise.all([pineconeData.initialize(), pineconeTruth.initialize()]);
+    await Promise.all([
+        pineconeData.initialize(),
+        pineconePrinciple.initialize(),
+    ]);
 }

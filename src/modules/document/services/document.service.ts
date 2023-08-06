@@ -211,4 +211,18 @@ export class DocumentService {
             session.endSession();
         }
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async updateDocumentStatus(data: any) {
+        try {
+            // TODO: update status
+        } catch (error: any) {
+            this.logger.error(
+                'In updateDocumentStatus()',
+                error.stack,
+                DocumentService.name,
+            );
+            throw error;
+        }
+    }
 }

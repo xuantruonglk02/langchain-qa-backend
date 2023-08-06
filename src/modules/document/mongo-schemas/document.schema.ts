@@ -4,6 +4,7 @@ import { File } from '@/modules/file/mongo-schemas/file.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Document as MongooseDocument, Types } from 'mongoose';
+import { DocumentStatus } from '../document.constants';
 
 @Schema({
     timestamps: true,
@@ -24,9 +25,17 @@ export class Document extends BaseEntity {
         default: null,
     })
     fileId: ObjectId;
+
+    @Prop({
+        type: String,
+        required: true,
+        enum: [...Object.values(DocumentStatus)],
+        default: DocumentStatus.PENDING,
+    })
+    status: DocumentStatus;
 }
 
 export type DocumentDocument = Document & MongooseDocument;
 export const DocumentSchema = SchemaFactory.createForClass(Document);
 
-export const documentAttributes = ['name', 'fileId'];
+export const documentAttributes = ['name', 'fileId', 'status'];

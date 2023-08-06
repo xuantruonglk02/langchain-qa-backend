@@ -30,8 +30,8 @@ export const LangchainConfigs = {
             hl: 'en',
             gl: 'us',
         },
-        truthQA: {
-            name: 'TheTruth',
+        principle: {
+            name: 'Principle',
             description: 'Provides absolutely accurate and factual information',
         },
         vectorStoreQA: {

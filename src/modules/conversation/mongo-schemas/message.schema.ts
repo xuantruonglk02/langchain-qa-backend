@@ -41,4 +41,4 @@ export class Message extends BaseEntity {
 export type MessageDocument = Message & Document;
 export const MessageSchema = SchemaFactory.createForClass(Message);
 
-export const messageAttributes = ['conversationId', 'type', 'content', 'raw'];
+export const messageAttributes = ['conversationId', 'type', 'content'];

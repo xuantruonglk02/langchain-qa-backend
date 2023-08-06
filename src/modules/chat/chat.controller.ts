@@ -28,7 +28,7 @@ export class ChatController {
     ) {}
 
     @Post('/')
-    async chat(
+    async chatInConversation(
         @Body(new TrimBodyPipe(), new JoiValidationPipe(chatBodySchema))
         body: IChat,
         @Req() req: any,
@@ -59,13 +59,17 @@ export class ChatController {
                 ]);
             }
 
-            const aiMessage = await this.chatService.callAgent(
+            const aiMessage = await this.chatService.chatInConversation(
                 body,
                 req.loggedUser._id,
             );
             return new SuccessResponse(aiMessage);
         } catch (error: any) {
-            this.logger.error('In chat()', error.stack, ChatController.name);
+            this.logger.error(
+                'In chatInConversation()',
+                error.stack,
+                ChatController.name,
+            );
             throw new InternalServerErrorException(error);
         }
     }
