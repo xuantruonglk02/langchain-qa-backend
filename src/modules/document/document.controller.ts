@@ -32,6 +32,7 @@ import {
     getUrlUploadDocumentQuerySchema,
 } from './document.validators';
 import { DocumentService } from './services/document.service';
+import { LangchainService } from '../langchain/langchain.service';
 
 @Controller('/document')
 @UseGuards(AuthenticationGuard)
@@ -40,6 +41,7 @@ export class DocumentController {
         private readonly logger: Logger,
         private readonly documentService: DocumentService,
         private readonly fileService: FileService,
+        private readonly langchainService: LangchainService,
     ) {}
 
     @Get('/')
@@ -244,6 +246,16 @@ export class DocumentController {
                     },
                 ]);
             }
+
+            // start censor document
+            this.langchainService
+                .censorDocument(body.fileId.toString())
+                .then((response) => {
+                    this.documentService.updateDocumentStatus(response);
+                })
+                .catch((error) => {
+                    throw error;
+                });
 
             return new SuccessResponse(updatedDocument);
         } catch (error: any) {

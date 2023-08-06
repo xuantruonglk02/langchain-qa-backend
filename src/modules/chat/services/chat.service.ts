@@ -1,6 +1,6 @@
 import { MessageType } from '@/modules/conversation/conversation.constants';
 import { ConversationService } from '@/modules/conversation/services/conversation.service';
-import { ChatConversationalAgent } from '@/modules/langchain/agents/ChatConversationAgent';
+import { LangchainService } from '@/modules/langchain/langchain.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { IChat } from '../chat.interfaces';
@@ -10,18 +10,11 @@ export class ChatService {
     constructor(
         private readonly logger: Logger,
         private readonly conversationService: ConversationService,
+        private readonly langchainService: LangchainService,
     ) {}
 
-    async callAgent(body: IChat, userId: ObjectId) {
+    async chatInConversation(body: IChat, userId: ObjectId) {
         try {
-            const chatAgent = new ChatConversationalAgent();
-            await chatAgent.initialize({
-                conversationId: body.conversationId.toString(),
-                vectorStoreQuery: {
-                    userId: userId.toString(),
-                },
-            });
-
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [_, aiResponse] = await Promise.all([
                 this.conversationService.createMessageInConversation(
@@ -32,7 +25,11 @@ export class ChatService {
                     },
                     userId,
                 ),
-                chatAgent.call(body.message),
+                this.langchainService.callAgent(
+                    userId.toString(),
+                    body.conversationId.toString(),
+                    body.message,
+                ),
             ]);
             const aiReply = aiResponse.output;
             const aiMessage =
@@ -44,7 +41,11 @@ export class ChatService {
                 });
             return aiMessage;
         } catch (error: any) {
-            this.logger.error('In callAgent()', error.stack, ChatService.name);
+            this.logger.error(
+                'In chatInConversation()',
+                error.stack,
+                ChatService.name,
+            );
             throw error;
         }
     }
