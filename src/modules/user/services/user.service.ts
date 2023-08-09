@@ -9,6 +9,7 @@ import {
     UserDocument,
     userAttributes,
 } from '../mongo-schemas/user.schema';
+import { UserRole } from '../user.constants';
 import { IUser } from '../user.interfaces';
 
 @Injectable()
@@ -72,6 +73,7 @@ export class UserService {
                     {
                         email: data.email,
                         name: data.name,
+                        role: UserRole.USER,
                         picture: data.picture,
                     },
                 ],

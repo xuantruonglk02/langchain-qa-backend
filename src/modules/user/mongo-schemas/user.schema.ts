@@ -2,6 +2,7 @@ import { MongoCollection } from '@/common/constants';
 import { BaseEntity } from '@/common/mongo-schemas/base.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { UserRole } from '../user.constants';
 
 @Schema({
     timestamps: true,
@@ -23,6 +24,13 @@ export class User extends BaseEntity {
 
     @Prop({
         type: String,
+        enum: [...Object.values(UserRole)],
+        required: true,
+    })
+    role: UserRole;
+
+    @Prop({
+        type: String,
         required: true,
     })
     picture: string;
@@ -31,4 +39,4 @@ export class User extends BaseEntity {
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
 
-export const userAttributes = ['email', 'name', 'picture'];
+export const userAttributes = ['email', 'name', 'role', 'picture'];
