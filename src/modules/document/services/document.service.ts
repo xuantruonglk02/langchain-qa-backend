@@ -9,10 +9,13 @@ import {
 import { ICommonListQuery } from '@/common/interfaces';
 import { DocumentExtension, FileType } from '@/modules/file/file.constants';
 import { FileService } from '@/modules/file/services/file.service';
+import { LangchainService } from '@/modules/langchain/langchain.service';
+import { TopicService } from '@/modules/topic/services/topic.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Connection, Model } from 'mongoose';
+import { DocumentStatus } from '../document.constants';
 import { ICreateDocument } from '../document.interfaces';
 import {
     Document,
@@ -29,6 +32,8 @@ export class DocumentService {
         private readonly connection: Connection,
         private readonly logger: Logger,
         private readonly fileService: FileService,
+        private readonly langchainService: LangchainService,
+        private readonly topicService: TopicService,
     ) {}
 
     async getDocumentById(id: ObjectId, attrs = documentAttributes) {
@@ -212,13 +217,69 @@ export class DocumentService {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async updateDocumentStatus(data: any) {
+    async updateDocumentProcessingStatusToAccepted(id: ObjectId) {
         try {
-            // TODO: update status
+            await this.documentModel.updateOne(
+                {
+                    _id: id,
+                    ...softDeleteCondition,
+                },
+                { $set: { status: DocumentStatus.ACCEPTED } },
+            );
         } catch (error: any) {
             this.logger.error(
-                'In updateDocumentStatus()',
+                'In updateDocumentProcessingStatusToAccepted()',
+                error.stack,
+                DocumentService.name,
+            );
+            throw error;
+        }
+    }
+
+    async updateDocumentProcessingStatusToError(id: ObjectId) {
+        try {
+            await this.documentModel.updateOne(
+                {
+                    _id: id,
+                    ...softDeleteCondition,
+                },
+                { $set: { status: DocumentStatus.ERROR } },
+            );
+        } catch (error: any) {
+            this.logger.error(
+                'In updateDocumentProcessingStatusToError()',
+                error.stack,
+                DocumentService.name,
+            );
+            throw error;
+        }
+    }
+
+    async checkDocument(id: ObjectId, fileKey: string, topicIds: ObjectId[]) {
+        try {
+            await this.documentModel.updateOne(
+                {
+                    _id: id,
+                    ...softDeleteCondition,
+                },
+                {
+                    $set: {
+                        status: DocumentStatus.PROCESSING,
+                    },
+                },
+            );
+
+            const topics = await this.topicService.getTopicsByIds(topicIds, [
+                'name',
+            ]);
+            const topicNames = topics.map((topic) => topic.name);
+
+            const tmpFilePath =
+                await this.fileService.downloadDocumentForChecking(fileKey);
+            await this.langchainService.checkDocument(tmpFilePath, topicNames);
+        } catch (error: any) {
+            this.logger.error(
+                'In checkDocument()',
                 error.stack,
                 DocumentService.name,
             );

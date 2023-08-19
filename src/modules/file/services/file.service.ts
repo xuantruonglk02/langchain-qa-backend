@@ -4,8 +4,10 @@ import moment from '@/plugins/moment';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { ObjectId } from 'mongodb';
 import { ClientSession, Model } from 'mongoose';
+import path from 'path';
 import { v4 as uuid } from 'uuid';
 import {
     DocumentExtension,
@@ -42,6 +44,25 @@ export class FileService {
         } catch (error: any) {
             this.logger.error(
                 'In getFileByIdAndKey()',
+                error.stack,
+                FileService.name,
+            );
+            throw error;
+        }
+    }
+
+    async getFileById(id: ObjectId, attrs = fileAttributes) {
+        try {
+            const file = await this.fileModel
+                .findOne({
+                    _id: id,
+                    ...softDeleteCondition,
+                })
+                .select(attrs);
+            return file;
+        } catch (error: any) {
+            this.logger.error(
+                'In getFileById()',
                 error.stack,
                 FileService.name,
             );
@@ -134,6 +155,34 @@ export class FileService {
             };
         } catch (error: any) {
             this.logger.error('In uploadFile()', error.stack, FileService.name);
+            throw error;
+        }
+    }
+
+    async downloadDocumentForChecking(fileKey: string) {
+        try {
+            const dirName = `${this.configService.get(
+                ConfigKey.TMP_DATA_FOLDER,
+            )}/${path.dirname(fileKey)}`;
+            if (!existsSync(dirName)) {
+                mkdirSync(dirName, { recursive: true });
+            }
+
+            const filePath = `${this.configService.get(
+                ConfigKey.TMP_DATA_FOLDER,
+            )}/${fileKey}`;
+
+            const { Body: fileBody } = await this.s3Service.getObject(fileKey);
+            const fileAsByteArray = await fileBody?.transformToByteArray();
+
+            writeFileSync(filePath, fileAsByteArray as Uint8Array);
+            return filePath;
+        } catch (error: any) {
+            this.logger.error(
+                'In downloadDocumentForChecking',
+                error.stack,
+                FileService.name,
+            );
             throw error;
         }
     }

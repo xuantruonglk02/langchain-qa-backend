@@ -11,3 +11,6 @@ export interface IConfirmDocumentUploaded {
     fileId: ObjectId;
     fileKey: string;
 }
+export interface ICheckDocumentWithTopics {
+    topicIds: ObjectId[];
+}

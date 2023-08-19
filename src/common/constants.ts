@@ -10,6 +10,7 @@ export enum MongoCollection {
     DOCUMENTS = 'documents',
     FILES = 'files',
     MESSAGES = 'messages',
+    TOPICS = 'topics',
     USERS = 'users',
 }
 

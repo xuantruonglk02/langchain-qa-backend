@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileModule } from '../file/file.module';
 import { LangchainModule } from '../langchain/langchain.module';
+import { TopicModule } from '../topic/topic.module';
 import { DocumentController } from './document.controller';
 import { Document, DocumentSchema } from './mongo-schemas/document.schema';
 import { DocumentService } from './services/document.service';
@@ -14,6 +15,7 @@ import { DocumentService } from './services/document.service';
         ]),
         FileModule,
         LangchainModule,
+        TopicModule,
     ],
     controllers: [DocumentController],
     providers: [Logger, JwtService, DocumentService],

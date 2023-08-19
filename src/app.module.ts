@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { ConversationModule } from './modules/conversation/conversation.module';
 import { DocumentModule } from './modules/document/document.module';
+import { TopicModule } from './modules/topic/topic.module';
 import { UserModule } from './modules/user/user.module';
 
 const NODE_ENV = process.env.NODE_ENV;
@@ -31,6 +32,7 @@ const NODE_ENV = process.env.NODE_ENV;
         ChatModule,
         ConversationModule,
         DocumentModule,
+        TopicModule,
         UserModule,
     ],
     controllers: [AppController],

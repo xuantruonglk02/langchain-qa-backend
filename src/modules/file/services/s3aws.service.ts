@@ -13,6 +13,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class S3AWSService {
     private readonly s3Client: S3Client;
+    private readonly bucketName: string;
 
     constructor(
         private readonly configService: ConfigService,
@@ -29,12 +30,15 @@ export class S3AWSService {
                 ) as string,
             },
         });
+        this.bucketName = configService.get(
+            ConfigKey.AWS_BUCKET_NAME,
+        ) as string;
     }
 
     async createPresignedUrlGetObject(fileKey: string) {
         try {
             const command = new GetObjectCommand({
-                Bucket: this.configService.get(ConfigKey.AWS_BUCKET_NAME),
+                Bucket: this.bucketName,
                 Key: fileKey,
             });
             const signedUrl = await getSignedUrl(this.s3Client, command, {
@@ -56,7 +60,7 @@ export class S3AWSService {
     async createPresignedUrlPutObject(fileKey: string) {
         try {
             const command = new PutObjectCommand({
-                Bucket: this.configService.get(ConfigKey.AWS_BUCKET_NAME),
+                Bucket: this.bucketName,
                 Key: fileKey,
             });
             const signedUrl = await getSignedUrl(this.s3Client, command, {
@@ -78,7 +82,7 @@ export class S3AWSService {
     async getObjectKeys(prefix?: string) {
         try {
             const command = new ListObjectsV2Command({
-                Bucket: this.configService.get(ConfigKey.AWS_BUCKET_NAME),
+                Bucket: this.bucketName,
                 Prefix: prefix,
             });
             const response = await this.s3Client.send(command);
@@ -93,10 +97,27 @@ export class S3AWSService {
         }
     }
 
+    async getObject(fileKey: string) {
+        try {
+            const command = new GetObjectCommand({
+                Bucket: this.bucketName,
+                Key: fileKey,
+            });
+            return await this.s3Client.send(command);
+        } catch (error: any) {
+            this.logger.error(
+                'In getObjectPromise()',
+                error.stack,
+                S3AWSService.name,
+            );
+            throw error;
+        }
+    }
+
     async deleteObjects(fileKeys: string[]) {
         try {
             const command = new DeleteObjectsCommand({
-                Bucket: this.configService.get(ConfigKey.AWS_BUCKET_NAME),
+                Bucket: this.bucketName,
                 Delete: {
                     Objects: fileKeys.map((key) => ({ Key: key })),
                 },

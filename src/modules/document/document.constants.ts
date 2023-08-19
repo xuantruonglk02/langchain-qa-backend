@@ -1,5 +1,6 @@
 export enum DocumentStatus {
     ACCEPTED = 'accepted',
+    ERROR = 'error',
     PENDING = 'pending',
-    REJECTED = 'rejected',
+    PROCESSING = 'processing',
 }

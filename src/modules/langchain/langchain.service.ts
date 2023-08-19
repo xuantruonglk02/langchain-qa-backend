@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PromptTemplate } from 'langchain';
 import { LLMChain } from 'langchain/chains';
+import mammoth from 'mammoth';
 import { ChatConversationalAgent } from './agents/ChatConversationAgent';
 import {
+    CHECK_DOCUMENT_PROMPT_TEMPLATE,
     CHECK_PRINCIPLES_PROMPT_TEMPLATE,
     SUMMARIZE_PRINCIPLES_PROMPT_TEMPLATE,
 } from './configs/prompts';
@@ -114,13 +116,47 @@ export class LangchainService {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async censorDocument(fileId: string) {
+    async checkDocument(filePath: string, topics: string[]) {
         try {
-            // TODO: check
+            const document = await mammoth.extractRawText({ path: filePath });
+            const paragraphs = document.value.split('\n\n');
+            const topicsString = topics.map((topic) => `- ${topic}`).join('\n');
+
+            const response = await Promise.all(
+                paragraphs.map((paragraph) =>
+                    this.checkDocumentParagraph(paragraph, topicsString),
+                ),
+            );
+            console.log(response);
         } catch (error: any) {
             this.logger.error(
-                'In censorDocument()',
+                'In checkDocument()',
+                error.stack,
+                LangchainService.name,
+            );
+            throw error;
+        }
+    }
+
+    async checkDocumentParagraph(content: string, topicsString: string) {
+        try {
+            const promptTemplate = new PromptTemplate({
+                template: CHECK_DOCUMENT_PROMPT_TEMPLATE,
+                inputVariables: ['document', 'topics'],
+            });
+            const llmChain = new LLMChain({
+                llm: openAIModel,
+                prompt: promptTemplate,
+            });
+            const response = await llmChain.call({
+                document: content,
+                topics: topicsString,
+            });
+            console.log(response);
+            return response;
+        } catch (error: any) {
+            this.logger.error(
+                'In checkDocumentParagraph()',
                 error.stack,
                 LangchainService.name,
             );

@@ -31,3 +31,29 @@ Text: """
 """`;
 export const CHECK_PRINCIPLES_PROMPT_TEMPLATE = `Does the sentence: "{input}" contradict with the following: "{principles}"?
 THINK STEP BY STEP. JUST ANSWER IN ONE OF [yes, no].`;
+
+export const CHECK_DOCUMENT_PROMPT_TEMPLATE = `In an editorial office, before publishing an article, one must review the content of that article to determine whether it is acceptable or not. It is necessary to ensure that the content of the article is not related to sensitive topics.
+
+You are a reviewer working in an editorial office. Your task is to examine the content of an article and issue a warning if the content of that article is related to sensitive topics.
+
+You are provided with the content of the article that needs to be checked and a list of various topics. If any sentence in that article is related to one or more topics in the list, please indicate the position of that sentence and the topics to which it is related.
+
+--------------------
+This is the article you need to check:
+
+{document}
+
+--------------------
+Here is the list of topics used to check the article above:
+
+{topics}
+
+----------------------------
+RESPONSE FORMAT INSTRUCTIONS
+
+Output a array of valid JSON object. Each object have 2 fields:
+
+"sentence": string, // The found sentence relate to any topics.
+"topics": array of string // The list of topics which the sentence relate to.
+
+If no sentence relates to any topics, just return a empty array.`;

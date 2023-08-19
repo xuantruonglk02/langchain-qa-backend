@@ -13,3 +13,6 @@ export const confirmDocumentUploadedBodySchema = Joi.object().keys({
     fileId: Joi.isObjectId().required(),
     fileKey: Joi.string().required(),
 });
+export const checkDocumentWithTopicsBodySchema = Joi.object().keys({
+    topicIds: Joi.array().items(Joi.isObjectId()).required(),
+});
