@@ -8,6 +8,7 @@ export enum Language {
 export enum MongoCollection {
     CONVERSATIONS = 'conversations',
     DOCUMENTS = 'documents',
+    DOCUMENT_ANALYSIS_RESULTS = 'document_analysis_results',
     FILES = 'files',
     MESSAGES = 'messages',
     TOPICS = 'topics',

@@ -1,7 +1,16 @@
+import { softDeleteCondition } from '@/common/constants';
 import { Injectable, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { PromptTemplate } from 'langchain';
 import { LLMChain } from 'langchain/chains';
 import mammoth from 'mammoth';
+import { ObjectId } from 'mongodb';
+import { Model } from 'mongoose';
+import { IParagraphAnalysisResult } from '../document/document.interfaces';
+import {
+    DocumentAnalysisResult,
+    DocumentAnalysisResultDocument,
+} from '../document/mongo-schemas/document-analysis-result';
 import { ChatConversationalAgent } from './agents/ChatConversationAgent';
 import {
     CHECK_DOCUMENT_PROMPT_TEMPLATE,
@@ -13,7 +22,11 @@ import { pineconePrinciple } from './models/PineconePrinciple';
 
 @Injectable()
 export class LangchainService {
-    constructor(private readonly logger: Logger) {}
+    constructor(
+        @InjectModel(DocumentAnalysisResult.name)
+        private readonly documentAnalysisResultDocumentModel: Model<DocumentAnalysisResultDocument>,
+        private readonly logger: Logger,
+    ) {}
 
     async callAgent(userId: string, conversationId: string, message: string) {
         try {
@@ -116,18 +129,25 @@ export class LangchainService {
         }
     }
 
-    async checkDocument(filePath: string, topics: string[]) {
+    async checkDocument(
+        documentAnalysisResultId: ObjectId,
+        filePath: string,
+        topics: string[],
+    ) {
         try {
             const document = await mammoth.extractRawText({ path: filePath });
             const paragraphs = document.value.split('\n\n');
             const topicsString = topics.map((topic) => `- ${topic}`).join('\n');
 
-            const response = await Promise.all(
+            await Promise.all(
                 paragraphs.map((paragraph) =>
-                    this.checkDocumentParagraph(paragraph, topicsString),
+                    this.checkDocumentParagraph(
+                        documentAnalysisResultId,
+                        paragraph,
+                        topicsString,
+                    ),
                 ),
             );
-            console.log(response);
         } catch (error: any) {
             this.logger.error(
                 'In checkDocument()',
@@ -138,7 +158,11 @@ export class LangchainService {
         }
     }
 
-    async checkDocumentParagraph(content: string, topicsString: string) {
+    async checkDocumentParagraph(
+        documentAnalysisResultId: ObjectId,
+        content: string,
+        topicsString: string,
+    ) {
         try {
             const promptTemplate = new PromptTemplate({
                 template: CHECK_DOCUMENT_PROMPT_TEMPLATE,
@@ -152,11 +176,40 @@ export class LangchainService {
                 document: content,
                 topics: topicsString,
             });
-            console.log(response);
-            return response;
+
+            await this.saveDocumentAnalysisResult(documentAnalysisResultId, {
+                rawParagraph: content,
+                rawResult: JSON.stringify(response),
+            });
         } catch (error: any) {
             this.logger.error(
                 'In checkDocumentParagraph()',
+                error.stack,
+                LangchainService.name,
+            );
+            throw error;
+        }
+    }
+
+    async saveDocumentAnalysisResult(
+        resultId: ObjectId,
+        data: IParagraphAnalysisResult,
+    ) {
+        try {
+            await this.documentAnalysisResultDocumentModel.updateOne(
+                {
+                    _id: resultId,
+                    ...softDeleteCondition,
+                },
+                {
+                    $push: {
+                        result: data,
+                    },
+                },
+            );
+        } catch (error: any) {
+            this.logger.error(
+                'In saveDocumentAnalysisResult()',
                 error.stack,
                 LangchainService.name,
             );

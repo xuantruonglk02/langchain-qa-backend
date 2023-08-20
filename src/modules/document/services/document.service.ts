@@ -18,6 +18,10 @@ import { Connection, Model } from 'mongoose';
 import { DocumentStatus } from '../document.constants';
 import { ICreateDocument } from '../document.interfaces';
 import {
+    DocumentAnalysisResult,
+    DocumentAnalysisResultDocument,
+} from '../mongo-schemas/document-analysis-result';
+import {
     Document,
     DocumentDocument,
     documentAttributes,
@@ -28,6 +32,8 @@ export class DocumentService {
     constructor(
         @InjectModel(Document.name)
         private readonly documentModel: Model<DocumentDocument>,
+        @InjectModel(DocumentAnalysisResult.name)
+        private readonly documentAnalysisResultDocumentModel: Model<DocumentAnalysisResultDocument>,
         @InjectConnection()
         private readonly connection: Connection,
         private readonly logger: Logger,
@@ -256,7 +262,10 @@ export class DocumentService {
     }
 
     async checkDocument(id: ObjectId, fileKey: string, topicIds: ObjectId[]) {
+        const session = await this.connection.startSession();
         try {
+            session.startTransaction();
+
             await this.documentModel.updateOne(
                 {
                     _id: id,
@@ -267,7 +276,20 @@ export class DocumentService {
                         status: DocumentStatus.PROCESSING,
                     },
                 },
+                { session },
             );
+            const documentAnalysisResult = (
+                await this.documentAnalysisResultDocumentModel.create(
+                    [
+                        {
+                            documentId: id,
+                        },
+                    ],
+                    { session },
+                )
+            )[0];
+
+            await session.commitTransaction();
 
             const topics = await this.topicService.getTopicsByIds(topicIds, [
                 'name',
@@ -276,14 +298,21 @@ export class DocumentService {
 
             const tmpFilePath =
                 await this.fileService.downloadDocumentForChecking(fileKey);
-            await this.langchainService.checkDocument(tmpFilePath, topicNames);
+            await this.langchainService.checkDocument(
+                documentAnalysisResult._id,
+                tmpFilePath,
+                topicNames,
+            );
         } catch (error: any) {
+            await session.abortTransaction();
             this.logger.error(
                 'In checkDocument()',
                 error.stack,
                 DocumentService.name,
             );
             throw error;
+        } finally {
+            session.endSession();
         }
     }
 }

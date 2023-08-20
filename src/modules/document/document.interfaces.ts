@@ -4,6 +4,10 @@ import { DocumentExtension } from '../file/file.constants';
 export interface ICreateDocument {
     name: string;
 }
+export interface IParagraphAnalysisResult {
+    rawParagraph: string;
+    rawResult: string;
+}
 export interface IGetUrlUploadDocument {
     fileExtension: DocumentExtension;
 }

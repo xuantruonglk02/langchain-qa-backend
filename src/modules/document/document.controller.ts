@@ -332,7 +332,8 @@ export class DocumentController {
                         id,
                     );
                 })
-                .catch(() => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                .catch((error) => {
                     this.documentService.updateDocumentProcessingStatusToError(
                         id,
                     );
