@@ -6,6 +6,7 @@ import { LLMChain } from 'langchain/chains';
 import mammoth from 'mammoth';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
+import { DocumentAnalysisParagraphStatus } from '../document/document.constants';
 import { IParagraphAnalysisResult } from '../document/document.interfaces';
 import {
     DocumentAnalysisResult,
@@ -136,7 +137,9 @@ export class LangchainService {
     ) {
         try {
             const document = await mammoth.extractRawText({ path: filePath });
-            const paragraphs = document.value.split('\n\n');
+            const paragraphs = document.value
+                .split('\n\n')
+                .filter((content) => !!content);
             const topicsString = topics.map((topic) => `- ${topic}`).join('\n');
 
             await Promise.all(
@@ -178,10 +181,17 @@ export class LangchainService {
             });
 
             await this.saveDocumentAnalysisResult(documentAnalysisResultId, {
+                status: DocumentAnalysisParagraphStatus.SUCCESS,
                 rawParagraph: content,
                 rawResult: JSON.stringify(response),
             });
         } catch (error: any) {
+            await this.saveDocumentAnalysisResult(documentAnalysisResultId, {
+                status: DocumentAnalysisParagraphStatus.ERROR,
+                rawParagraph: content,
+                rawResult: null,
+            });
+
             this.logger.error(
                 'In checkDocumentParagraph()',
                 error.stack,

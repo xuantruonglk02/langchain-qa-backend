@@ -120,6 +120,56 @@ export class DocumentService {
         }
     }
 
+    async getAnalysisResultsList(
+        documentId: ObjectId,
+        query: ICommonListQuery,
+    ) {
+        try {
+            const {
+                page = DEFAULT_FIRST_PAGE,
+                limit = DEFAULT_ITEM_PER_PAGE_LIMIT,
+                orderBy = DEFAULT_ORDER_BY,
+                orderDirection = DEFAULT_ORDER_DIRECTION,
+            } = query;
+            const getListQuery: Record<string, any> = {
+                documentId: documentId,
+                ...softDeleteCondition,
+            };
+
+            const [resultList, total] = await Promise.all([
+                this.documentAnalysisResultDocumentModel.aggregate([
+                    { $match: getListQuery },
+                    {
+                        $sort: {
+                            [orderBy]: MongoOrderDirection[orderDirection],
+                        },
+                    },
+                    {
+                        $skip:
+                            parseInt(limit.toString()) *
+                            (parseInt(page.toString()) - 1),
+                    },
+                    { $limit: parseInt(limit.toString()) },
+                ]),
+                this.documentAnalysisResultDocumentModel.countDocuments(
+                    getListQuery,
+                ),
+            ]);
+
+            return {
+                items: resultList,
+                totalItems: total,
+            };
+        } catch (error: any) {
+            this.logger.error(
+                'In getAnalysisResultsList()',
+                error.stack,
+                DocumentService.name,
+            );
+            throw error;
+        }
+    }
+
     async checkDocumentMappedToFile(fileId: ObjectId) {
         try {
             const document = this.documentModel

@@ -2,9 +2,17 @@ import { MongoCollection } from '@/common/constants';
 import { BaseEntity } from '@/common/mongo-schemas/base.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { DocumentAnalysisParagraphStatus } from '../document.constants';
 import { IParagraphAnalysisResult } from '../document.interfaces';
 
 export class ParagraphAnalysisResult {
+    @Prop({
+        type: String,
+        enum: [...Object.values(DocumentAnalysisParagraphStatus)],
+        required: true,
+    })
+    status: DocumentAnalysisParagraphStatus;
+
     @Prop({
         type: String,
         required: true,
@@ -15,7 +23,7 @@ export class ParagraphAnalysisResult {
         type: String,
         required: true,
     })
-    rawResult: string;
+    rawResult: string | null;
 }
 
 @Schema({

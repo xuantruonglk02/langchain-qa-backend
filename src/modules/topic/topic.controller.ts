@@ -94,9 +94,9 @@ export class TopicController {
                 ]);
             }
             if (topic.createdBy.toString() !== req.loggedUser._id.toString()) {
-                return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
                     {
-                        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                        statusCode: HttpStatus.FORBIDDEN,
                         key: 'id',
                     },
                 ]);

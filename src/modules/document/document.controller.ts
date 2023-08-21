@@ -132,6 +132,53 @@ export class DocumentController {
         }
     }
 
+    @Get('/:id/analysis-result')
+    async getDocumentAnalysisResultsList(
+        @Param('id', new ParseObjectIdPipe()) id: ObjectId,
+        @Query(
+            new RemoveEmptyQueryPipe(),
+            new JoiValidationPipe(commonListQuerySchema),
+        )
+        query: ICommonListQuery,
+        @Req() req: any,
+    ) {
+        try {
+            const document = await this.documentService.getDocumentById(id, [
+                '_id',
+                'createdBy',
+            ]);
+            if (!document) {
+                return new ErrorResponse(HttpStatus.NOT_FOUND, [
+                    {
+                        statusCode: HttpStatus.NOT_FOUND,
+                        key: 'id',
+                    },
+                ]);
+            }
+            if (
+                req.loggedUser._id.toString() !== document.createdBy.toString()
+            ) {
+                return new ErrorResponse(HttpStatus.FORBIDDEN, [
+                    {
+                        statusCode: HttpStatus.FORBIDDEN,
+                        key: 'id',
+                    },
+                ]);
+            }
+
+            const resultList =
+                await this.documentService.getAnalysisResultsList(id, query);
+            return new SuccessResponse(resultList);
+        } catch (error: any) {
+            this.logger.error(
+                'In getDocumentAnalysisResultsList()',
+                error.stack,
+                DocumentController.name,
+            );
+            throw new InternalServerErrorException(error);
+        }
+    }
+
     @Post('/')
     async createDocument(
         @Body(
